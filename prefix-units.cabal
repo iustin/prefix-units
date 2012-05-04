@@ -66,7 +66,7 @@ Source-repository head
 Source-repository this
   Type:             git
   Location:         https://code.google.com/p/prefix-units/
-  Tag:              0.1.0
+  Tag:              prefix-units-v0.1.0
 
 Library
   -- Modules exported by the library.

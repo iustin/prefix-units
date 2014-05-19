@@ -27,4 +27,9 @@ lint:
 	@rm -f report.html
 	hlint --report -c Data
 
-.PHONY: build int-docs haddock configure test dist lint
+clean:
+	cabal clean
+	rm -rf dist
+	rm -f report.html
+
+.PHONY: build int-docs haddock configure test dist lint clean

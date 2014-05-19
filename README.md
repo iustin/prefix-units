@@ -20,6 +20,11 @@ For building and installing, `cabal configure` and related commands
 are enough. Run `cabal configure --enable-tests && cabal build &&
 cabal test` if you want to run the unit-tests.
 
+The library is designed to have very few dependencies (only base and a
+few GHC extensions), so that it's trivial to use it in projects. Hence
+the use of some hand-coded conversions instead of using
+TemplateHaskell to generate them automatically.
+
 TODO
 ----
 

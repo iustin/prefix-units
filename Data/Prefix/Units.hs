@@ -463,9 +463,9 @@ parseKMGTSymbol = helperParseKMGT . upperSym
 data ParseMode
   = ParseExact   -- ^ Exact parser mode. This mode is fully
                  -- case-sensitive.
-  | ParseKMGT    -- ^ Parses only units with bigger than 'Kilo',
-                 -- respectively 'Kibi' (for binary units). This allows
-                 -- the parser to be case-insensitive.
+  | ParseKMGT    -- ^ Parses only units bigger than 'Kilo',
+                 -- respectively 'Kibi' (for binary units). This
+                 -- allows the parser to be case-insensitive.
   | ParseBinary  -- ^ Parses binary units only. In this mode, both the
                  -- exact and shortened forms are accepted (e.g. both
                  -- \"k\" and \"ki\" will be converted into

@@ -385,32 +385,32 @@ unknownUnit unit = Left $ "Unrecognised unit '" ++ unit ++ "'"
 
 -- | Parses a symbol in the exact mode. See 'ParseExact' for details.
 parseExactSymbol :: String -> Either String Unit
-parseExactSymbol "y" = Right Yocto
-parseExactSymbol "z" = Right Zepto
-parseExactSymbol "a" = Right Atto
-parseExactSymbol "f" = Right Femto
-parseExactSymbol "p" = Right Pico
-parseExactSymbol "n" = Right Nano
-parseExactSymbol "u" = Right Micro
-parseExactSymbol "m" = Right Milli
-parseExactSymbol "c" = Right Centi
-parseExactSymbol "d" = Right Deci
+parseExactSymbol "y"  = Right Yocto
+parseExactSymbol "z"  = Right Zepto
+parseExactSymbol "a"  = Right Atto
+parseExactSymbol "f"  = Right Femto
+parseExactSymbol "p"  = Right Pico
+parseExactSymbol "n"  = Right Nano
+parseExactSymbol "u"  = Right Micro
+parseExactSymbol "m"  = Right Milli
+parseExactSymbol "c"  = Right Centi
+parseExactSymbol "d"  = Right Deci
 parseExactSymbol "da" = Right Deka
-parseExactSymbol "h" = Right Hecto
-parseExactSymbol "k" = Right Kilo
+parseExactSymbol "h"  = Right Hecto
+parseExactSymbol "k"  = Right Kilo
 parseExactSymbol "Ki" = Right Kibi
-parseExactSymbol "M" = Right Mega
+parseExactSymbol "M"  = Right Mega
 parseExactSymbol "Mi" = Right Mebi
-parseExactSymbol "G" = Right Giga
+parseExactSymbol "G"  = Right Giga
 parseExactSymbol "Gi" = Right Gibi
-parseExactSymbol "T" = Right Tera
+parseExactSymbol "T"  = Right Tera
 parseExactSymbol "Ti" = Right Tebi
-parseExactSymbol "P" = Right Peta
+parseExactSymbol "P"  = Right Peta
 parseExactSymbol "Pi" = Right Pebi
-parseExactSymbol "E" = Right Exa
+parseExactSymbol "E"  = Right Exa
 parseExactSymbol "Ei" = Right Exbi
-parseExactSymbol "Z" = Right Zetta
-parseExactSymbol "Y" = Right Yotta
+parseExactSymbol "Z"  = Right Zetta
+parseExactSymbol "Y"  = Right Yotta
 parseExactSymbol unit = unknownUnit unit
 
 -- | Helper for 'parseBinarySymbol' which only deals with upper-case

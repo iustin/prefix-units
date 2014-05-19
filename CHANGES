@@ -1,3 +1,8 @@
+Version 0.1.0.1
+
+* Trivial release updating upper package bounds (for testing), and
+  updating homepage/related settings as part of move to github
+
 Version 0.1.0
 
 * Initial release

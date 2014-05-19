@@ -7,7 +7,7 @@ Name:                prefix-units
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
 -- standards guiding when and how versions should be incremented.
-Version:             0.1.0
+Version:             0.1.0.1
 
 -- A short (one-line) description of the package.
 Synopsis:            A basic library for SI/binary prefix units
@@ -23,7 +23,7 @@ Description:
   <http://physics.nist.gov/cuu/Units/binary.html>.
 
 -- URL for the project homepage or repository.
-Homepage:            http://code.google.com/p/prefix-units/
+Homepage:            https://github.com/iustin/prefix-units
 
 -- The license under which the package is released.
 License:             BSD3
@@ -39,14 +39,14 @@ Author:              Iustin Pop <iustin@google.com>
 Maintainer:          Iustin Pop <iustin@google.com>
 
 -- A copyright notice.
-Copyright:           (c) 2012 Google Inc.
+Copyright:           (c) 2012, 2014 Google Inc.
 
 Category:            Data
 
 -- Stability field.
 Stability:           alpha
 
-Bug-reports:         https://code.google.com/p/prefix-units/issues/
+Bug-reports:         https://github.com/iustin/prefix-units/issues
 
 Build-type:          Simple
 
@@ -57,16 +57,16 @@ Extra-source-files:  README.md CHANGES Makefile
 -- Constraint on the version of Cabal needed to build this package.
 Cabal-version:       >= 1.8.0.2
 
-Tested-with:         GHC==6.12.1, GHC==7.4.1
+Tested-with:         GHC==6.12.1, GHC==7.4.1, GHC==7.6.3
 
 Source-repository head
   Type:             git
-  Location:         https://code.google.com/p/prefix-units/
+  Location:         https://github.com/iustin/prefix-units.git
 
 Source-repository this
   Type:             git
-  Location:         https://code.google.com/p/prefix-units/
-  Tag:              prefix-units-v0.1.0
+  Location:         https://github.com/iustin/prefix-units.git
+  Tag:              prefix-units-v0.1.0.1
 
 Library
   -- Modules exported by the library.

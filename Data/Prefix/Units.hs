@@ -1,6 +1,6 @@
 {-
 
-Copyright 2012, Google Inc.
+Copyright 2012, 2014, Google Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -348,7 +348,7 @@ formatValue :: (RationalConvertible a) =>
             -> a               -- ^ The value to format
             -> (a, Maybe Unit) -- ^ Scaled value and optional unit
 formatValue fmt val =
-  let unit = either (flip recommendedUnit val) Just fmt
+  let unit = either (`recommendedUnit` val) Just fmt
       scaled = maybe val (scaleToUnit val) unit
   in (scaled, unit)
 

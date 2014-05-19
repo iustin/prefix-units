@@ -491,13 +491,12 @@ parseSymbol ParseExact = parseExactSymbol
 parseSymbol ParseKMGT = parseKMGTSymbol
 parseSymbol ParseBinary = parseBinarySymbol
 
--- | Generic parse routine. Takes two function arguments which fix the
--- initial and final conversion, a parse mode and the string to be
--- parsed.
+-- | Main parse routine.
 parseValue :: (Read a, RationalConvertible a) =>
                 ParseMode       -- ^ The desired parse mode
              -> String          -- ^ String to be parsed
-             -> Either String a
+             -> Either String a -- ^ Either a Left error message, or
+                                -- a Right parsed value
 parseValue = parseGeneric UnitOptional []
 
 -- | Validate a parsed unit using a given valid options list.
@@ -527,8 +526,8 @@ processUnit popts pmode valid_units unit_suffix =
          -- String a" monad instance
          either Left (validUnit valid_units) (parseSymbol pmode unit_suffix)
 
--- | Generic parse routine. Takes two function arguments which fix the
--- initial and final conversion, a parse mode and the string to be
+-- | Low-level parse routine. Takes two function arguments which fix
+-- the initial and final conversion, a parse mode and the string to be
 -- parsed.
 parseGeneric :: (Read a, RationalConvertible a) =>
                 ParseOptions    -- ^ Unit options

@@ -23,4 +23,8 @@ test:
 dist:
 	cabal sdist
 
-.PHONY: build int-docs haddock configure test dist
+lint:
+	@rm -f report.html
+	hlint --report -c Data
+
+.PHONY: build int-docs haddock configure test dist lint

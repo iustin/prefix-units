@@ -415,25 +415,25 @@ parseExactSymbol unit = unknownUnit unit
 
 -- | Helper for 'parseBinarySymbol' which only deals with upper-case
 -- strings.
-helperParseBinary :: String -> Either String Unit
-helperParseBinary "K"  = Right Kibi
-helperParseBinary "KI" = Right Kibi
-helperParseBinary "M"  = Right Mebi
-helperParseBinary "MI" = Right Mebi
-helperParseBinary "G"  = Right Gibi
-helperParseBinary "GI" = Right Gibi
-helperParseBinary "T"  = Right Tebi
-helperParseBinary "TI" = Right Tebi
-helperParseBinary "P"  = Right Pebi
-helperParseBinary "PI" = Right Pebi
-helperParseBinary "E"  = Right Exbi
-helperParseBinary "EI" = Right Exbi
--- FIXME: error message will contain upper-case version of the symbol
-helperParseBinary symbol = unknownUnit symbol
+helperParseBinary :: String -> Maybe Unit
+helperParseBinary "K"  = Just Kibi
+helperParseBinary "KI" = Just Kibi
+helperParseBinary "M"  = Just Mebi
+helperParseBinary "MI" = Just Mebi
+helperParseBinary "G"  = Just Gibi
+helperParseBinary "GI" = Just Gibi
+helperParseBinary "T"  = Just Tebi
+helperParseBinary "TI" = Just Tebi
+helperParseBinary "P"  = Just Pebi
+helperParseBinary "PI" = Just Pebi
+helperParseBinary "E"  = Just Exbi
+helperParseBinary "EI" = Just Exbi
+helperParseBinary _    = Nothing
 
 -- | Parses a binary symbol. See 'ParseBinary' for details.
 parseBinarySymbol :: String -> Either String Unit
-parseBinarySymbol = helperParseBinary . upperSym
+parseBinarySymbol symbol =
+  maybe (unknownUnit symbol) Right . helperParseBinary . upperSym $ symbol
 
 -- | Helper for 'parseKMGTSymbol' which only deals with upper-case strings.
 helperParseKMGT :: String -> Either String Unit

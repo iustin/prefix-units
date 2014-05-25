@@ -1,6 +1,6 @@
 {-
 
-Copyright 2012, Google Inc.
+Copyright 2012, 2014, Google Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,9 @@ import Data.Char (toUpper)
 import Data.List
 import Test.Framework (Test, defaultMain, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
+import Test.Framework.Providers.HUnit (testCase)
 import Test.QuickCheck
+import Test.HUnit hiding (Test)
 
 import Data.Prefix.Units
 
@@ -98,36 +100,36 @@ allUnits = [minBound..maxBound]
 
 -- ** Definitions
 
-testUniqueNames :: Property
+testUniqueNames :: Assertion
 testUniqueNames =
   let names = map unitName allUnits
-  in names ==? nub names
+  in nub names @=? names
 
-testUniqueSymbols :: Property
+testUniqueSymbols :: Assertion
 testUniqueSymbols =
   let symbols = map unitSymbol allUnits
-  in symbols ==? nub symbols
+  in  nub symbols @=? symbols
 
-testUniqueFancySymbols :: Property
+testUniqueFancySymbols :: Assertion
 testUniqueFancySymbols =
   let symbols = map fancySymbol allUnits
-  in symbols ==? nub symbols
+  in nub symbols @=? symbols
 
-testOrdering :: Property
-testOrdering =
+testOrdering :: Assertion
+testOrdering = do
   let si_mult = map unitMultiplier $ sort siUnits
       bin_mult = map unitMultiplier $ sort binaryUnits
       all_mult = map unitMultiplier allUnits -- no sorting here!
-  in si_mult ==? sort si_mult .&&.
-     bin_mult ==? sort bin_mult .&&.
-     all_mult ==? sort all_mult
+  sort si_mult @=? si_mult
+  sort bin_mult @=? bin_mult
+  sort all_mult @=? all_mult
 
-testSIBinary :: Property
+testSIBinary :: Assertion
 testSIBinary =
-  printTestCase "SI unit lists contain binary prefixes" $
-                (null (siUnits `intersect` binaryUnits)) .&&.
-                (null (siKMGT `intersect` binaryUnits)) .&&.
-                (null (siSupraunitary `intersect` binaryUnits))
+  assertBool "SI unit lists contain binary prefixes" $
+               (null (siUnits `intersect` binaryUnits)) &&
+               (null (siKMGT `intersect` binaryUnits)) &&
+               (null (siSupraunitary `intersect` binaryUnits))
 
 -- ** Parsing
 
@@ -312,11 +314,11 @@ main = defaultMain tests
 tests :: [Test]
 tests =
   [ testGroup "definitions"
-    [ testProperty "unique names" testUniqueNames
-    , testProperty "unique symbols" testUniqueSymbols
-    , testProperty "unique fancy symbols" testUniqueFancySymbols
-    , testProperty "ordering" testOrdering
-    , testProperty "type mixup" testSIBinary
+    [ testCase "unique names" testUniqueNames
+    , testCase "unique symbols" testUniqueSymbols
+    , testCase "unique fancy symbols" testUniqueFancySymbols
+    , testCase "ordering" testOrdering
+    , testCase "type mixup" testSIBinary
     ]
   , testGroup "parsing"
     [ testProperty "null unit integral" testNullUnitInt

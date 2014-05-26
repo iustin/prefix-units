@@ -127,9 +127,9 @@ testOrdering = do
 testSIBinary :: Assertion
 testSIBinary =
   assertBool "SI unit lists contain binary prefixes" $
-               (null (siUnits `intersect` binaryUnits)) &&
-               (null (siKMGT `intersect` binaryUnits)) &&
-               (null (siSupraunitary `intersect` binaryUnits))
+               null (siUnits `intersect` binaryUnits) &&
+               null (siKMGT `intersect` binaryUnits) &&
+               null (siSupraunitary `intersect` binaryUnits)
 
 -- ** Parsing
 
@@ -179,7 +179,7 @@ testSymbolParsingBinaryAll mode =
 testSymbolParsingFail :: ParseMode -> Property
 testSymbolParsingFail mode =
   expectParseFailure (("NO-SUCH" `isInfixOf`) . map toUpper) $
-    parseSymbol mode ("no-such")
+    parseSymbol mode "no-such"
 
 -- | Parsed values should be correct.
 testParsingIntKMGT :: Int -> Property
@@ -202,7 +202,7 @@ testParsingInt v =
 testParsingDouble :: Unit -> Double -> Property
 testParsingDouble unit d =
   let str = show d ++ unitSymbol unit in
-  case (parseValue ParseExact str)::Either String Double of
+  case parseValue ParseExact str::Either String Double of
     Left err -> failParseUnit unit err
     Right d' -> printTestCase ("Parsing of " ++ str ++ " failed: ") $
                 d' ==? fromRational (toRational d * unitMultiplier unit)
@@ -297,7 +297,7 @@ testShowIntegralBinary =
   forAll (elements binaryUnits) $ \ unit ->
   let value = truncate (unitMultiplier unit)::Integer in
   printTestCase ("Formatting/showing unit " ++ show unit) $
-   showValue (Left FormatBinary) value ==? "1" ++ unitSymbol unit
+   showValue (Left FormatBinary) value ==? '1' : unitSymbol unit
 
 testShowRational :: Unit -> Property
 testShowRational unit =

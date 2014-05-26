@@ -25,7 +25,7 @@ dist:
 
 lint:
 	@rm -f report.html
-	hlint --report -c Data
+	hlint --report -c Data test
 
 clean:
 	cabal clean

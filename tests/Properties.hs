@@ -271,6 +271,15 @@ testRecommend =
     Just unit' -> printTestCase ("Mismatch in recommended unit for value " ++
                                  show value ++ ": ") $ unit ==? unit'
 
+-- | Test that small values in [1, 10) are not scaled.
+testRecommendSmall :: Property
+testRecommendSmall =
+  forAll (elements [FormatSiAll, FormatBinary]) $ \fmt ->
+  forAll (choose (1.0::Double, 10) `suchThat` (< 10)) $ \value ->
+    let result = recommendedUnit fmt value
+    in printTestCase ("Expected Nothing but got recommended unit " ++
+                      show result) $ result == Nothing
+
 testForceUnit :: Unit -> Rational -> Property
 testForceUnit unit v =
   case formatValue (Right unit) v of
@@ -344,6 +353,7 @@ tests =
     , testProperty "trivial formatting/fmt" testTrivialFormattingFmt
     , testProperty "trivial formatting/show" testTrivialFormattingShow
     , testProperty "recommend" testRecommend
+    , testProperty "recommend small units" testRecommendSmall
     , testProperty "force unit" testForceUnit
     , testProperty "format/int" testFormatIntegral
     , testProperty "format/frac" testFormatFractional

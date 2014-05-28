@@ -336,11 +336,16 @@ unitRange FormatBinary = binaryUnits
 -- supraunitary representation. In case we don't find any such value
 -- (e.g. for a zero value), then 'Nothing' is returned.
 recommendedUnit :: (Real a) => FormatMode -> a -> Maybe Unit
-recommendedUnit fmt val =
-  let range = unitRange fmt
-      ratv = Prelude.toRational val
-  in foldr (\u a -> if ratv / unitMultiplier u >= 1 then Just u else a)
-     Nothing $ reverse range
+recommendedUnit fmt val
+  -- FIXME: this is not nice at all: we hardcode the set [1, 10)
+  -- instead of having it naturally follow from a base unit or
+  -- similar.
+  | val >= 1 && val < 10 = Nothing
+  | otherwise =
+    let range = unitRange fmt
+        ratv = Prelude.toRational val
+    in foldr (\u a -> if ratv / unitMultiplier u >= 1 then Just u else a)
+       Nothing $ reverse range
 
 -- | Computes the scaled value and unit for a given value
 formatValue :: (RationalConvertible a) =>

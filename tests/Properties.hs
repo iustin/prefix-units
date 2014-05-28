@@ -264,11 +264,12 @@ testRecommend :: Property
 testRecommend =
   forAll (elements [FormatSiAll, FormatBinary]) $ \fmt ->
   forAll (elements (unitRange fmt)) $ \unit ->
-  case recommendedUnit fmt (unitMultiplier unit) of
+  let value = unitMultiplier unit in
+  case recommendedUnit fmt value of
     Nothing -> failTest $ "Expected recommendation of unit " ++
-               unitName unit ++ " but got nothing"
-    Just unit' -> printTestCase "Mismatch in recommended unit: " $
-                  unit ==? unit'
+               unitName unit ++ " for " ++ show value ++ " but got nothing"
+    Just unit' -> printTestCase ("Mismatch in recommended unit for value " ++
+                                 show value ++ ": ") $ unit ==? unit'
 
 testForceUnit :: Unit -> Rational -> Property
 testForceUnit unit v =

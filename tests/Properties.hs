@@ -41,6 +41,7 @@ module Main (main) where
 
 import Data.Char (toUpper)
 import Data.List
+import Data.Maybe (isNothing)
 import Test.Framework (Test, defaultMain, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
 import Test.Framework.Providers.HUnit (testCase)
@@ -287,7 +288,7 @@ testRecommendSmall =
   forAll (choose (1.0::Double, 10) `suchThat` (< 10)) $ \value ->
     let result = recommendedUnit fmt value
     in counterexample ("Expected Nothing but got recommended unit " ++
-                       show result) $ result == Nothing
+                       show result) $ isNothing result
 
 testForceUnit :: Unit -> Rational -> Property
 testForceUnit unit v =

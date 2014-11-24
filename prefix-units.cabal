@@ -93,8 +93,8 @@ Test-Suite test-units
                    , Cabal >= 1.9.2
                    , test-framework >= 0.6
                    , test-framework-quickcheck2 >= 0.2.12
-                   , test-framework-hunit >= 0.3
+                   , test-framework-hunit >= 0.2.7
                    , QuickCheck >= 2.4.2
-                   , HUnit >= 1.2.5
+                   , HUnit >= 1.2.4
                    , prefix-units
   ghc-options:       -Wall -fno-warn-orphans

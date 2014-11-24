@@ -66,7 +66,7 @@ Source-repository head
 Source-repository this
   Type:             git
   Location:         https://github.com/iustin/prefix-units.git
-  Tag:              prefix-units-v0.1.0.1
+  Tag:              prefix-units-v0.1.0.2
 
 Library
   -- Modules exported by the library.

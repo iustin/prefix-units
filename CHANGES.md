@@ -2,6 +2,8 @@ Version 0.1.0.2
 
 * Trivial release for compatibility with QuickCheck 2.7 and older
   HUnit packages as found in Wheezy
+* The release switches the test suite to use Cabal macros, which might
+  create issues in some cases.
 
 Version 0.1.0.1
 

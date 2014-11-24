@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 {-
 
 Copyright 2012, 2014, Google Inc.
@@ -49,12 +51,19 @@ import Data.Prefix.Units
 
 -- * Test helpers
 
+#if MIN_VERSION_QuickCheck(2,7,0)
+#else
+-- | Forward-compatible name for QuickCheck < 2.7.
+counterexample :: Test.QuickCheck.Testable prop => String -> prop -> Property
+counterexample = printTestCase
+#endif
+
 failTest :: String -> Property
-failTest msg = printTestCase msg False
+failTest msg = counterexample msg False
 
 -- | Checks for equality with proper annotation.
 (==?) :: (Show a, Eq a) => a -> a -> Property
-(==?) x y = printTestCase
+(==?) x y = counterexample
             ("Expected equality, but '" ++
              show x ++ "' /= '" ++ show y ++ "'") (x == y)
 infix 3 ==?
@@ -71,7 +80,7 @@ expectParseFailure :: (Show a) =>
                    -> Either String a
                    -> Property
 expectParseFailure fn (Left err) =
-  printTestCase "Unexpected error message" $ fn err
+  counterexample "Unexpected error message" $ fn err
 expectParseFailure _  (Right v)  =
   failTest $ "Unexpected parse with result " ++ show v
 
@@ -79,7 +88,7 @@ expectParseFailure _  (Right v)  =
 expectParse :: (Real a, Real b) => a -> Unit -> Either String b -> Property
 expectParse _ unit (Left err) = failParseUnit unit err
 expectParse v unit (Right v') =
-  printTestCase "Parsed wrong value: " $
+  counterexample "Parsed wrong value: " $
   toRational v' ==? toRational v * unitMultiplier unit
 
 -- * Instances
@@ -137,19 +146,19 @@ testNullUnitInt :: Int -> ParseMode -> Property
 testNullUnitInt v pmode =
   case parseValue pmode (show v) of
     Left err -> failTest $ "Failed to parse empty unit: " ++ err
-    Right v' -> printTestCase "Parsed wrong value:" (v ==? v')
+    Right v' -> counterexample "Parsed wrong value:" (v ==? v')
 
 testNullUnitFrac :: Double -> ParseMode -> Property
 testNullUnitFrac d pmode =
   case parseValue pmode (show d) of
     Left err -> failTest $ "Failed to parse empty unit: " ++ err
-    Right d' -> printTestCase "Parsed wrong value:" (d ==? d')
+    Right d' -> counterexample "Parsed wrong value:" (d ==? d')
 
 testSymbolParsingExact :: Unit -> Property
 testSymbolParsingExact unit =
   case parseExactSymbol (unitSymbol unit) of
     Left err -> failParseUnit unit err
-    Right unit' -> printTestCase "Parsed wrong unit: " (unit ==? unit')
+    Right unit' -> counterexample "Parsed wrong unit: " (unit ==? unit')
 
 -- | Binary units should parse themselves in explicit binary mode.
 testSymbolParsingBinary :: Property
@@ -157,7 +166,7 @@ testSymbolParsingBinary =
   forAll (elements binaryUnits) $ \unit ->
   case parseBinarySymbol (unitSymbol unit) of
     Left err -> failParseUnit unit err
-    Right unit' -> printTestCase "Parsed wrong unit: " (unit ==? unit')
+    Right unit' -> counterexample "Parsed wrong unit: " (unit ==? unit')
 
 -- | Binary units should parse themselves in all parsing modes.
 testSymbolParsingBinaryAbbrev :: Property
@@ -165,7 +174,7 @@ testSymbolParsingBinaryAbbrev =
   forAll (elements binaryUnits) $ \unit ->
   case parseSymbol ParseBinary (take 1 (unitSymbol unit)) of
     Left err -> failParseUnit unit err
-    Right unit' -> printTestCase "Parsed wrong unit: " (unit ==? unit')
+    Right unit' -> counterexample "Parsed wrong unit: " (unit ==? unit')
 
 -- | Binary units should parse themselves in all parsing modes.
 testSymbolParsingBinaryAll :: ParseMode -> Property
@@ -173,7 +182,7 @@ testSymbolParsingBinaryAll mode =
   forAll (elements binaryUnits) $ \unit ->
   case parseSymbol mode (unitSymbol unit) of
     Left err -> failParseUnit unit err
-    Right unit' -> printTestCase "Parsed wrong unit: " (unit ==? unit')
+    Right unit' -> counterexample "Parsed wrong unit: " (unit ==? unit')
 
 -- | Fail to parse invalid symbols in any mode.
 testSymbolParsingFail :: ParseMode -> Property
@@ -204,7 +213,7 @@ testParsingDouble unit d =
   let str = show d ++ unitSymbol unit in
   case parseValue ParseExact str::Either String Double of
     Left err -> failParseUnit unit err
-    Right d' -> printTestCase ("Parsing of " ++ str ++ " failed: ") $
+    Right d' -> counterexample ("Parsing of " ++ str ++ " failed: ") $
                 d' ==? fromRational (toRational d * unitMultiplier unit)
 
 -- | Parsed values should be correct.
@@ -268,8 +277,8 @@ testRecommend =
   case recommendedUnit fmt value of
     Nothing -> failTest $ "Expected recommendation of unit " ++
                unitName unit ++ " for " ++ show value ++ " but got nothing"
-    Just unit' -> printTestCase ("Mismatch in recommended unit for value " ++
-                                 show value ++ ": ") $ unit ==? unit'
+    Just unit' -> counterexample ("Mismatch in recommended unit for value " ++
+                                  show value ++ ": ") $ unit ==? unit'
 
 -- | Test that small values in [1, 10) are not scaled.
 testRecommendSmall :: Property
@@ -277,13 +286,13 @@ testRecommendSmall =
   forAll (elements [FormatSiAll, FormatBinary]) $ \fmt ->
   forAll (choose (1.0::Double, 10) `suchThat` (< 10)) $ \value ->
     let result = recommendedUnit fmt value
-    in printTestCase ("Expected Nothing but got recommended unit " ++
-                      show result) $ result == Nothing
+    in counterexample ("Expected Nothing but got recommended unit " ++
+                       show result) $ result == Nothing
 
 testForceUnit :: Unit -> Rational -> Property
 testForceUnit unit v =
   case formatValue (Right unit) v of
-    (v', Just u') -> printTestCase "Invalid value/unit computed" $
+    (v', Just u') -> counterexample "Invalid value/unit computed" $
                      unit ==? u' .&&.
                      v ==? v' * unitMultiplier unit
     x -> failTest $ "Invalid result from formatValue: " ++ show x
@@ -306,14 +315,14 @@ testShowIntegralBinary :: Property
 testShowIntegralBinary =
   forAll (elements binaryUnits) $ \ unit ->
   let value = truncate (unitMultiplier unit)::Integer in
-  printTestCase ("Formatting/showing unit " ++ show unit) $
-   showValue (Left FormatBinary) value ==? '1' : unitSymbol unit
+  counterexample ("Formatting/showing unit " ++ show unit) $
+    showValue (Left FormatBinary) value ==? '1' : unitSymbol unit
 
 testShowRational :: Unit -> Property
 testShowRational unit =
   let fmtmode = if unit `elem` binaryUnits then FormatBinary else FormatSiAll
       value = unitMultiplier unit
-  in printTestCase ("Formatting/showing unit " ++ show unit) $
+  in counterexample ("Formatting/showing unit " ++ show unit) $
      showValue (Left fmtmode) value ==? "1 % 1" ++ unitSymbol unit
 
 -- * Test harness

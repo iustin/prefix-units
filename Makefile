@@ -25,7 +25,8 @@ dist:
 
 lint:
 	@rm -f report.html
-	hlint --report -c Data test
+	hlint --cpp-define='MIN_VERSION_QuickCheck(a,b,c)=1' \
+	  --report -c Data tests
 
 clean:
 	cabal clean

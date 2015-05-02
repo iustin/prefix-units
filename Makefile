@@ -25,7 +25,9 @@ dist:
 
 lint:
 	@rm -f report.html
-	hlint --cpp-define='MIN_VERSION_QuickCheck(a,b,c)=1' \
+	hlint \
+	  --cpp-define='MIN_VERSION_QuickCheck(a,b,c)=1' \
+	  --cpp-define='MIN_VERSION_base(a,b,c)=1' \
 	  --report -c Data tests
 
 clean:

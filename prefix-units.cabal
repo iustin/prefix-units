@@ -39,7 +39,7 @@ Author:              Iustin Pop <iustin@google.com>
 Maintainer:          Iustin Pop <iustin@google.com>
 
 -- A copyright notice.
-Copyright:           (c) 2012, 2014 Google Inc.
+Copyright:           (c) 2012, 2014, 2015 Google Inc.
 
 Category:            Data
 
@@ -76,7 +76,7 @@ Library
   Build-depends:  base >= 3 && < 5
 
   -- Modules not exported by this package.
-  Other-modules:
+  Other-modules:  Data.Prefix.Units.Compat
 
   GHC-Options:    -Wall
 

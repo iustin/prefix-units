@@ -1,6 +1,6 @@
 {-
 
-Copyright 2012, 2014, Google Inc.
+Copyright 2012, 2014, 2015, Google Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -120,11 +120,10 @@ module Data.Prefix.Units
   , showValueWith
   ) where
 
-import Control.Monad.Instances ()
 import Data.Char (toUpper)
 import Data.List (intercalate)
 
---import Data.Prefix.Units.Helpers
+import Data.Prefix.Units.Compat ()
 
 default ()
 

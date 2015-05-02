@@ -1,0 +1,7 @@
+language: haskell
+
+# let's test as many versions as we can!
+ghc:
+    - 7.4
+    - 7.6
+    - 7.8

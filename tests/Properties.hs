@@ -253,6 +253,18 @@ testParsingValidList unit valid v =
    (parseGeneric UnitOptional valid ParseExact
       (show v ++ unitSymbol unit)::Either String Rational)
 
+testParsingNegativePositive :: Unit -> Positive Int -> Property
+testParsingNegativePositive unit (Positive val) =
+  let pos = show val ++ unitSymbol unit
+      neg = show (negate val) ++ unitSymbol unit
+  in case (parseValue ParseExact pos::Either String Int,
+           parseValue ParseExact neg::Either String Int) of
+       (_, Left err) ->
+         failParseUnit unit err
+       (Left err, _) ->
+         failParseUnit unit err
+       (Right vpos, Right vneg) -> vpos ==? negate vneg
+
 -- ** Formatting
 
 testTrivialFormattingRec :: FormatMode -> Property
@@ -333,6 +345,16 @@ testShowRational unit =
   in counterexample ("Formatting/showing unit " ++ show unit) $
      showValue (Left fmtmode) value ==? "1 % 1" ++ unitSymbol unit
 
+-- ** Round-trip tests
+
+testRoundTripRational :: Rational -> FormatMode -> Property
+testRoundTripRational val mode =
+  let fmted = showValue (Left mode) val in
+  case parseValue ParseExact fmted of
+    Left err -> failTest ("Failed to parse formatted strint '" ++ fmted ++
+                          "': " ++ err)
+    Right val' -> val ==? val'
+
 -- * Test harness
 
 main :: IO ()
@@ -364,6 +386,7 @@ tests =
     , testProperty "parsing/default" testParsingDefault
     , testProperty "parsing/invalid-list" testParsingInvalidList
     , testProperty "parsing/valid-list" testParsingValidList
+    , testProperty "parsing negativ/positive" testParsingNegativePositive
     ]
   , testGroup "formatting"
     [ testProperty "trivial formatting/recommend" testTrivialFormattingRec
@@ -377,5 +400,8 @@ tests =
     , testProperty "format/frac" testFormatFractional
     , testProperty "show/integral binary" testShowIntegralBinary
     , testProperty "show/rational" testShowRational
+    ]
+  , testGroup "round-trip"
+    [ testProperty "rational round-trip" testRoundTripRational
     ]
   ]

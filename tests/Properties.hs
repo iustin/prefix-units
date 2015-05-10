@@ -305,6 +305,12 @@ testFormatIntegral =
   let fmted = formatValue (Left fmt) . truncate . unitMultiplier $ unit
   in fmted ==? (1::Integer, Just unit)
 
+testNegativePositiveEquiv :: Positive Int -> Either FormatMode Unit -> Property
+testNegativePositiveEquiv (Positive i) mode =
+  let (pscaled, punit) = formatValue mode i
+      (nscaled, nunit) = formatValue mode (negate i)
+  in (pscaled, punit) ==? (negate nscaled, nunit)
+
 testFormatFractional :: Property
 testFormatFractional =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
@@ -362,6 +368,7 @@ tests =
     [ testProperty "trivial formatting/recommend" testTrivialFormattingRec
     , testProperty "trivial formatting/fmt" testTrivialFormattingFmt
     , testProperty "trivial formatting/show" testTrivialFormattingShow
+    , testProperty "negative/positive equivalence" testNegativePositiveEquiv
     , testProperty "recommend" testRecommend
     , testProperty "recommend small units" testRecommendSmall
     , testProperty "force unit" testForceUnit

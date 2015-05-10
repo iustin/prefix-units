@@ -352,9 +352,13 @@ formatValue :: (RationalConvertible a) =>
             -> a               -- ^ The value to format
             -> (a, Maybe Unit) -- ^ Scaled value and optional unit
 formatValue fmt val =
-  let unit = either (`recommendedUnit` val) Just fmt
-      scaled = maybe val (scaleToUnit val) unit
-  in (scaled, unit)
+  let inverter = if val < 0
+                   then negate
+                   else id
+      val' = inverter val
+      unit = either (`recommendedUnit` val') Just fmt
+      scaled = maybe val' (scaleToUnit val') unit
+  in (inverter scaled, unit)
 
 -- | Simple helper to generate the full string representation of an
 -- integral value.

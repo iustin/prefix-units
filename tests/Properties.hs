@@ -102,6 +102,7 @@ instance Arbitrary FormatMode where
                        , FormatSiSupraunitary
                        , FormatSiKMGT
                        , FormatBinary
+                       , FormatUnscaled
                        ]
 
 instance Arbitrary ParseMode where
@@ -314,6 +315,15 @@ testForceUnit unit v =
                      v ==? v' * unitMultiplier unit
     x -> failTest $ "Invalid result from formatValue: " ++ show x
 
+
+testForceNoUnit :: Rational -> Property
+testForceNoUnit v =
+  case formatValue (Left FormatUnscaled) v of
+    (v', Nothing) -> counterexample "Invalid value computed" $
+                     v ==? v'
+    (_, Just u) -> failTest ("Formatted using unit '" ++ show u ++
+                              "' when no unit expected")
+
 testFormatIntegral :: Property
 testFormatIntegral =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
@@ -400,6 +410,7 @@ tests =
     , testProperty "recommend" testRecommend
     , testProperty "recommend small units" testRecommendSmall
     , testProperty "force unit" testForceUnit
+    , testProperty "force no unit" testForceNoUnit
     , testProperty "format/int" testFormatIntegral
     , testProperty "format/frac" testFormatFractional
     , testProperty "show/integral binary" testShowIntegralBinary

@@ -314,10 +314,12 @@ data FormatMode
   | FormatSiSupraunitary -- ^ Formats the value using supraunitary SI
                          -- units only (which means that e.g. @0.001@
                          -- will remain as such instead of being
-                         -- formatted as @1m@)
+                         -- formatted as @1m@).
   | FormatSiKMGT         -- ^ Formats the value using units greater or
                          -- equal to 'Kilo'.
   | FormatBinary         -- ^ Formats the value using binary units.
+  | FormatUnscaled       -- ^ Formats the value as it is, without
+                         -- scaling.
     deriving (Show)
 
 -- | Type synonym to choose between a 'FormatMode' or a 'Unit'.
@@ -325,10 +327,11 @@ type FormatOption = Either FormatMode Unit
 
 -- | The available units range for various format modes.
 unitRange :: FormatMode -> [Unit]
-unitRange FormatSiAll = siUnits
+unitRange FormatSiAll          = siUnits
 unitRange FormatSiSupraunitary = siSupraunitary
-unitRange FormatSiKMGT = siKMGT
-unitRange FormatBinary = binaryUnits
+unitRange FormatSiKMGT         = siKMGT
+unitRange FormatBinary         = binaryUnits
+unitRange FormatUnscaled       = []
 
 -- | Computes the recommended unit for displaying a given value. The
 -- simple algorithm uses the first unit for which we have a

@@ -98,7 +98,11 @@ instance Arbitrary Unit where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary FormatMode where
-  arbitrary = elements [minBound..maxBound]
+  arbitrary = elements [ FormatSiAll
+                       , FormatSiSupraunitary
+                       , FormatSiKMGT
+                       , FormatBinary
+                       ]
 
 instance Arbitrary ParseMode where
   arbitrary = elements [minBound..maxBound]

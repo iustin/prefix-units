@@ -318,7 +318,7 @@ data FormatMode
   | FormatSiKMGT         -- ^ Formats the value using units greater or
                          -- equal to 'Kilo'.
   | FormatBinary         -- ^ Formats the value using binary units.
-    deriving (Show, Enum, Bounded)
+    deriving (Show)
 
 -- | Type synonym to choose between a 'FormatMode' or a 'Unit'.
 type FormatOption = Either FormatMode Unit

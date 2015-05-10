@@ -198,14 +198,14 @@ testParsingIntKMGT v =
   let str = show v ++ unitSymbol unit in
   expectParse v unit (parseValue ParseKMGT str::Either String Integer)
 
--- | Parsed values should be correct.
+-- | Parsed integer values should be correct.
 testParsingInt :: Int -> Property
 testParsingInt v =
   forAll (elements (siSupraunitary ++ binaryUnits)) $ \unit ->
   let str = show v ++ unitSymbol unit in
   expectParse v unit (parseValue ParseExact str::Either String Integer)
 
--- | Parsed values should be correct.
+-- | Parsed double values should be correct.
 --
 -- Note that this tests floating point number equality, so it could be
 -- flaky.
@@ -217,7 +217,7 @@ testParsingDouble unit d =
     Right d' -> counterexample ("Parsing of " ++ str ++ " failed: ") $
                 d' ==? fromRational (toRational d * unitMultiplier unit)
 
--- | Parsed values should be correct.
+-- | Parsed rational values should be correct.
 testParsingRational :: Unit -> Integer -> Property
 testParsingRational unit v =
   let str = show v ++ "%1" ++ unitSymbol unit in
@@ -305,8 +305,9 @@ testFormatIntegral =
   let fmted = formatValue (Left fmt) . truncate . unitMultiplier $ unit
   in fmted ==? (1::Integer, Just unit)
 
-testNegativePositiveEquiv :: Positive Int -> Either FormatMode Unit -> Property
-testNegativePositiveEquiv (Positive i) mode =
+testFormatNegativePositive :: Positive Int -> Either FormatMode Unit
+                           -> Property
+testFormatNegativePositive (Positive i) mode =
   let (pscaled, punit) = formatValue mode i
       (nscaled, nunit) = formatValue mode (negate i)
   in (pscaled, punit) ==? (negate nscaled, nunit)
@@ -368,7 +369,7 @@ tests =
     [ testProperty "trivial formatting/recommend" testTrivialFormattingRec
     , testProperty "trivial formatting/fmt" testTrivialFormattingFmt
     , testProperty "trivial formatting/show" testTrivialFormattingShow
-    , testProperty "negative/positive equivalence" testNegativePositiveEquiv
+    , testProperty "negative/positive equivalence" testFormatNegativePositive
     , testProperty "recommend" testRecommend
     , testProperty "recommend small units" testRecommendSmall
     , testProperty "force unit" testForceUnit

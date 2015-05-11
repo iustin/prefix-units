@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 module Main (main) where
 
+import Control.Applicative (pure, (<$>))
 import Data.Char (toUpper)
 import Data.List
 import Data.Maybe (isNothing)
@@ -92,18 +93,27 @@ expectParse v unit (Right v') =
   counterexample "Parsed wrong value: " $
   toRational v' ==? toRational v * unitMultiplier unit
 
+-- | Generates an auto-scale 'FormatMode'.
+genAutoMode :: Gen FormatMode
+genAutoMode = elements [ FormatSiAll
+                       , FormatSiSupraunitary
+                       , FormatSiKMGT
+                       , FormatBinary
+                       ]
+
 -- * Instances
 
 instance Arbitrary Unit where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary FormatMode where
-  arbitrary = elements [ FormatSiAll
-                       , FormatSiSupraunitary
-                       , FormatSiKMGT
-                       , FormatBinary
-                       , FormatUnscaled
-                       ]
+  arbitrary = oneof [ pure FormatSiAll
+                    , pure FormatSiSupraunitary
+                    , pure FormatSiKMGT
+                    , pure FormatBinary
+                    , pure FormatUnscaled
+                    , FormatFixed <$> arbitrary
+                    ]
 
 instance Arbitrary ParseMode where
   arbitrary = elements [minBound..maxBound]
@@ -272,20 +282,23 @@ testParsingNegativePositive unit (Positive val) =
 
 -- ** Formatting
 
-testTrivialFormattingRec :: FormatMode -> Property
-testTrivialFormattingRec fmt =
+testTrivialFormattingRec :: Property
+testTrivialFormattingRec =
+  forAll genAutoMode $ \fmt ->
   recommendedUnit fmt (0::Int) ==? Nothing .&&.
   recommendedUnit fmt (0::Double) ==? Nothing
 
-testTrivialFormattingFmt :: FormatMode -> Property
-testTrivialFormattingFmt fmt =
-  formatValue (Left fmt) (0::Int) ==? (0, Nothing) .&&.
-  formatValue (Left fmt) (0::Double) ==? (0, Nothing)
+testTrivialFormattingFmt :: Property
+testTrivialFormattingFmt =
+  forAll genAutoMode $ \fmt ->
+  formatValue fmt (0::Int) ==? (0, Nothing) .&&.
+  formatValue fmt (0::Double) ==? (0, Nothing)
 
-testTrivialFormattingShow :: FormatMode -> Property
-testTrivialFormattingShow fmt =
-  showValue (Left fmt) (0::Int) ==? "0" .&&.
-  showValue (Left fmt) (0::Double) ==? show (0::Double)
+testTrivialFormattingShow :: Property
+testTrivialFormattingShow =
+  forAll genAutoMode $ \fmt ->
+  showValue fmt (0::Int) ==? "0" .&&.
+  showValue fmt (0::Double) ==? show (0::Double)
 
 testRecommend :: Property
 testRecommend =
@@ -309,16 +322,15 @@ testRecommendSmall =
 
 testForceUnit :: Unit -> Rational -> Property
 testForceUnit unit v =
-  case formatValue (Right unit) v of
+  case formatValue (FormatFixed unit) v of
     (v', Just u') -> counterexample "Invalid value/unit computed" $
                      unit ==? u' .&&.
                      v ==? v' * unitMultiplier unit
     x -> failTest $ "Invalid result from formatValue: " ++ show x
 
-
 testForceNoUnit :: Rational -> Property
 testForceNoUnit v =
-  case formatValue (Left FormatUnscaled) v of
+  case formatValue FormatUnscaled v of
     (v', Nothing) -> counterexample "Invalid value computed" $
                      v ==? v'
     (_, Just u) -> failTest ("Formatted using unit '" ++ show u ++
@@ -328,11 +340,10 @@ testFormatIntegral :: Property
 testFormatIntegral =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
   forAll (elements (unitRange fmt)) $ \unit ->
-  let fmted = formatValue (Left fmt) . truncate . unitMultiplier $ unit
+  let fmted = formatValue fmt . truncate . unitMultiplier $ unit
   in fmted ==? (1::Integer, Just unit)
 
-testFormatNegativePositive :: Positive Int -> Either FormatMode Unit
-                           -> Property
+testFormatNegativePositive :: Positive Int -> FormatMode -> Property
 testFormatNegativePositive (Positive i) mode =
   let (pscaled, punit) = formatValue mode i
       (nscaled, nunit) = formatValue mode (negate i)
@@ -342,7 +353,7 @@ testFormatFractional :: Property
 testFormatFractional =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
   forAll (elements (unitRange fmt)) $ \unit ->
-  let fmted = formatValue (Left fmt) . unitMultiplier $ unit
+  let fmted = formatValue fmt . unitMultiplier $ unit
   in fmted ==? (1::Rational, Just unit)
 
 testShowIntegralBinary :: Property
@@ -350,20 +361,20 @@ testShowIntegralBinary =
   forAll (elements binaryUnits) $ \ unit ->
   let value = truncate (unitMultiplier unit)::Integer in
   counterexample ("Formatting/showing unit " ++ show unit) $
-    showValue (Left FormatBinary) value ==? '1' : unitSymbol unit
+    showValue FormatBinary value ==? '1' : unitSymbol unit
 
 testShowRational :: Unit -> Property
 testShowRational unit =
   let fmtmode = if unit `elem` binaryUnits then FormatBinary else FormatSiAll
       value = unitMultiplier unit
   in counterexample ("Formatting/showing unit " ++ show unit) $
-     showValue (Left fmtmode) value ==? "1 % 1" ++ unitSymbol unit
+     showValue fmtmode value ==? "1 % 1" ++ unitSymbol unit
 
 -- ** Round-trip tests
 
 testRoundTripRational :: Rational -> FormatMode -> Property
 testRoundTripRational val mode =
-  let fmted = showValue (Left mode) val in
+  let fmted = showValue mode val in
   case parseValue ParseExact fmted of
     Left err -> failTest ("Failed to parse formatted strint '" ++ fmted ++
                           "': " ++ err)

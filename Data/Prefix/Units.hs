@@ -320,10 +320,8 @@ data FormatMode
   | FormatBinary         -- ^ Formats the value using binary units.
   | FormatUnscaled       -- ^ Formats the value as it is, without
                          -- scaling.
+  | FormatFixed Unit     -- ^ Formats the value using the given unit.
     deriving (Show)
-
--- | Type synonym to choose between a 'FormatMode' or a 'Unit'.
-type FormatOption = Either FormatMode Unit
 
 -- | The available units range for various format modes.
 unitRange :: FormatMode -> [Unit]
@@ -332,12 +330,16 @@ unitRange FormatSiSupraunitary = siSupraunitary
 unitRange FormatSiKMGT         = siKMGT
 unitRange FormatBinary         = binaryUnits
 unitRange FormatUnscaled       = []
+unitRange (FormatFixed u)      = [u]
 
 -- | Computes the recommended unit for displaying a given value. The
 -- simple algorithm uses the first unit for which we have a
 -- supraunitary representation. In case we don't find any such value
--- (e.g. for a zero value), then 'Nothing' is returned.
+-- (e.g. for a zero value), then 'Nothing' is returned. For
+-- `FormatFixed`, we always select the given unit, irrespective of the
+-- value.
 recommendedUnit :: (Real a) => FormatMode -> a -> Maybe Unit
+recommendedUnit (FormatFixed u) _ = Just u
 recommendedUnit fmt val
   -- FIXME: this is not nice at all: we hardcode the set [1, 10)
   -- instead of having it naturally follow from a base unit or
@@ -351,7 +353,7 @@ recommendedUnit fmt val
 
 -- | Computes the scaled value and unit for a given value
 formatValue :: (RationalConvertible a) =>
-               FormatOption    -- ^ The desired 'FormatMode' or 'Unit'
+               FormatMode      -- ^ The desired 'FormatMode'
             -> a               -- ^ The value to format
             -> (a, Maybe Unit) -- ^ Scaled value and optional unit
 formatValue fmt val =
@@ -359,7 +361,7 @@ formatValue fmt val =
                    then negate
                    else id
       val' = inverter val
-      unit = either (`recommendedUnit` val') Just fmt
+      unit = recommendedUnit fmt val'
       scaled = maybe val' (scaleToUnit val') unit
   in (inverter scaled, unit)
 
@@ -370,7 +372,7 @@ showValueWith :: (RationalConvertible a, Show a) =>
                                    -- (optional) unit into a
                                    -- string, e.g. 'unitSymbol' or
                                    -- 'fancySymbol'
-              -> FormatOption      -- ^ The desired format mode
+              -> FormatMode        -- ^ The desired format mode
               -> a                 -- ^ The value to show
               -> String            -- ^ Resulting string
 showValueWith symbfn fmt val =
@@ -379,11 +381,7 @@ showValueWith symbfn fmt val =
 
 -- | Generates a final string representation of a value.
 showValue :: (RationalConvertible a, Show a) =>
-             FormatOption  -- ^ The desired format mode, either as a
-                           -- 'Left' 'FormatMode' value which computes
-                           -- the unit automatically, or as a 'Right'
-                           -- 'Unit', which will use the specified
-                           -- unit
+             FormatMode    -- ^ The desired format mode.
           -> a             -- ^ The value to show
           -> String        -- ^ Resulting string
 showValue = showValueWith unitSymbol

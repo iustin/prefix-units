@@ -149,6 +149,10 @@ testOrdering = do
   sort bin_mult @=? bin_mult
   sort all_mult @=? all_mult
 
+testOrderingProp :: Unit -> Unit -> Property
+testOrderingProp u1 u2 =
+  compare u1 u2 ==? compare (unitMultiplier u1) (unitMultiplier u2)
+
 testSIBinary :: Assertion
 testSIBinary =
   assertBool "SI unit lists contain binary prefixes" $
@@ -392,6 +396,7 @@ tests =
     , testCase "unique symbols" testUniqueSymbols
     , testCase "unique fancy symbols" testUniqueFancySymbols
     , testCase "ordering" testOrdering
+    , testProperty "ordering/prop" testOrderingProp
     , testCase "type mixup" testSIBinary
     ]
   , testGroup "parsing"

@@ -142,9 +142,9 @@ testUniqueFancySymbols =
 
 testOrdering :: Assertion
 testOrdering = do
-  let si_mult = map unitMultiplier $ sort siUnits
-      bin_mult = map unitMultiplier $ sort binaryUnits
-      all_mult = map unitMultiplier allUnits -- no sorting here!
+  let si_mult = map unitMultiplier siUnits
+      bin_mult = map unitMultiplier binaryUnits
+      all_mult = map unitMultiplier allUnits
   sort si_mult @=? si_mult
   sort bin_mult @=? bin_mult
   sort all_mult @=? all_mult

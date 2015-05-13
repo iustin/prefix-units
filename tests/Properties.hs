@@ -224,17 +224,29 @@ testParsingInt v =
   let str = show v ++ unitSymbol unit in
   expectParse v unit (parseValue ParseExact str::Either String Integer)
 
--- | Parsed double values should be correct.
---
--- Note that this tests floating point number equality, so it could be
--- flaky.
-testParsingDouble :: Unit -> Double -> Property
-testParsingDouble unit d =
+-- | Polymorphic helper for checking parsing.
+parsingHelper :: forall a. (Show a, Read a,
+                            RationalConvertible a, Fractional a) =>
+                 Unit -> a -> Property
+parsingHelper unit d =
   let str = show d ++ unitSymbol unit in
-  case parseValue ParseExact str::Either String Double of
+  case parseValue ParseExact str::Either String a of
     Left err -> failParseUnit unit err
     Right d' -> counterexample ("Parsing of " ++ str ++ " failed: ") $
                 d' ==? fromRational (toRational d * unitMultiplier unit)
+
+-- | Parsed float values should be correct.
+--
+-- Note that this tests floating point number equality, so it could be
+-- flaky, especially as float has lower resolution than double.
+testParsingFloat :: Unit -> Float -> Property
+testParsingFloat = parsingHelper
+
+-- | Parsed double values should be correct.
+--
+-- Also potentially flaky.
+testParsingDouble :: Unit -> Double -> Property
+testParsingDouble = parsingHelper
 
 -- | Parsed rational values should be correct.
 testParsingRational :: Unit -> Integer -> Property
@@ -409,7 +421,8 @@ tests =
     , testProperty "symbol parsing/failure" testSymbolParsingFail
     , testProperty "parsing/integral-kmgt" testParsingIntKMGT
     , testProperty "parsing/integral" testParsingInt
-    , testProperty "parsing/fractional" testParsingDouble
+    , testProperty "parsing/fractional-float" testParsingFloat
+    , testProperty "parsing/fractional-double" testParsingDouble
     , testProperty "parsing/rational" testParsingRational
     , testProperty "parsing/failure" testFailParsing
     , testProperty "parsing/required unit" testParsingRequired

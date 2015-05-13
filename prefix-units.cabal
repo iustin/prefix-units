@@ -80,7 +80,9 @@ Library
 
   GHC-Options:    -Wall
 
-  Extensions:     Safe TypeSynonymInstances FlexibleInstances
+  Extensions:     Safe
+                  TypeSynonymInstances
+                  FlexibleInstances
 
   -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
   -- Build-tools:
@@ -99,3 +101,4 @@ Test-Suite test-units
                    , prefix-units
   ghc-options:       -Wall -fno-warn-orphans
   Extensions:      CPP
+                   ScopedTypeVariables

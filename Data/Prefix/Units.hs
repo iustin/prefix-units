@@ -94,6 +94,8 @@ module Data.Prefix.Units
   , siSupraunitary
   , siKMGT
   , binaryUnits
+  , siBase
+  , binaryBase
   -- ** Unit-related functions
   , unitMultiplier
   , unitName
@@ -175,6 +177,14 @@ siSupraunitary = filter (>= Deka) siUnits
 siKMGT :: [Unit]
 siKMGT = filter (>= Kilo) siUnits
 
+-- | The base for SI units.
+siBase :: Rational
+siBase = 10
+
+-- | The base for binary units.
+binaryBase :: Rational
+binaryBase = 2
+
 -- | Returns the unit scaling \"multiplier\" (which can be either
 -- supra- or sub-unitary):
 --
@@ -183,32 +193,32 @@ siKMGT = filter (>= Kilo) siUnits
 -- >>> unitMultiplier Mebi
 -- 1048576 % 1
 unitMultiplier :: Unit -> Rational
-unitMultiplier Yocto = 10.0 ^^ (-24 :: Int)
-unitMultiplier Zepto = 10.0 ^^ (-21 :: Int)
-unitMultiplier Atto  = 10.0 ^^ (-18 :: Int)
-unitMultiplier Femto = 10.0 ^^ (-15 :: Int)
-unitMultiplier Pico  = 10.0 ^^ (-12 :: Int)
-unitMultiplier Nano  = 10.0 ^^ ( -9 :: Int)
-unitMultiplier Micro = 10.0 ^^ ( -6 :: Int)
-unitMultiplier Milli = 10.0 ^^ ( -3 :: Int)
-unitMultiplier Centi = 10.0 ^^ ( -2 :: Int)
-unitMultiplier Deci  = 10.0 ^^ ( -1 :: Int)
-unitMultiplier Deka  = 10.0 ^^ (  1 :: Int)
-unitMultiplier Hecto = 10.0 ^^ (  2 :: Int)
-unitMultiplier Kilo  = 10.0 ^^ (  3 :: Int)
-unitMultiplier Kibi  =  2.0 ^^ ( 10 :: Int)
-unitMultiplier Mega  = 10.0 ^^ (  6 :: Int)
-unitMultiplier Mebi  =  2.0 ^^ ( 20 :: Int)
-unitMultiplier Giga  = 10.0 ^^ (  9 :: Int)
-unitMultiplier Gibi  =  2.0 ^^ ( 30 :: Int)
-unitMultiplier Tera  = 10.0 ^^ ( 12 :: Int)
-unitMultiplier Tebi  =  2.0 ^^ ( 40 :: Int)
-unitMultiplier Peta  = 10.0 ^^ ( 15 :: Int)
-unitMultiplier Pebi  =  2.0 ^^ ( 50 :: Int)
-unitMultiplier Exa   = 10.0 ^^ ( 18 :: Int)
-unitMultiplier Exbi  =  2.0 ^^ ( 60 :: Int)
-unitMultiplier Zetta = 10.0 ^^ ( 21 :: Int)
-unitMultiplier Yotta = 10.0 ^^ ( 24 :: Int)
+unitMultiplier Yocto = siBase     ^^ (-24 :: Int)
+unitMultiplier Zepto = siBase     ^^ (-21 :: Int)
+unitMultiplier Atto  = siBase     ^^ (-18 :: Int)
+unitMultiplier Femto = siBase     ^^ (-15 :: Int)
+unitMultiplier Pico  = siBase     ^^ (-12 :: Int)
+unitMultiplier Nano  = siBase     ^^ ( -9 :: Int)
+unitMultiplier Micro = siBase     ^^ ( -6 :: Int)
+unitMultiplier Milli = siBase     ^^ ( -3 :: Int)
+unitMultiplier Centi = siBase     ^^ ( -2 :: Int)
+unitMultiplier Deci  = siBase     ^^ ( -1 :: Int)
+unitMultiplier Deka  = siBase     ^^ (  1 :: Int)
+unitMultiplier Hecto = siBase     ^^ (  2 :: Int)
+unitMultiplier Kilo  = siBase     ^^ (  3 :: Int)
+unitMultiplier Kibi  = binaryBase ^^ ( 10 :: Int)
+unitMultiplier Mega  = siBase     ^^ (  6 :: Int)
+unitMultiplier Mebi  = binaryBase ^^ ( 20 :: Int)
+unitMultiplier Giga  = siBase     ^^ (  9 :: Int)
+unitMultiplier Gibi  = binaryBase ^^ ( 30 :: Int)
+unitMultiplier Tera  = siBase     ^^ ( 12 :: Int)
+unitMultiplier Tebi  = binaryBase ^^ ( 40 :: Int)
+unitMultiplier Peta  = siBase     ^^ ( 15 :: Int)
+unitMultiplier Pebi  = binaryBase ^^ ( 50 :: Int)
+unitMultiplier Exa   = siBase     ^^ ( 18 :: Int)
+unitMultiplier Exbi  = binaryBase ^^ ( 60 :: Int)
+unitMultiplier Zetta = siBase     ^^ ( 21 :: Int)
+unitMultiplier Yotta = siBase     ^^ ( 24 :: Int)
 
 -- | Returns the unit full name.
 unitName :: Unit -> String

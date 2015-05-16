@@ -160,6 +160,13 @@ testSIBinary =
                null (siKMGT `intersect` binaryUnits) &&
                null (siSupraunitary `intersect` binaryUnits)
 
+testSISmallMultipliers :: Assertion
+testSISmallMultipliers = do
+  let baseExp = siBase ^^ (3::Int)
+  mapM_ (\unit -> assertEqual ("For unit " ++ unitName unit ++ ": ")
+         (baseExp * unitMultiplier (pred unit)) (unitMultiplier unit))
+      $ tail (filter (<= Milli) siUnits)
+
 -- ** Parsing
 
 testNullUnitInt :: Int -> ParseMode -> Property
@@ -410,6 +417,7 @@ tests =
     , testCase "ordering" testOrdering
     , testProperty "ordering/prop" testOrderingProp
     , testCase "type mixup" testSIBinary
+    , testCase "SI small multipliers" testSISmallMultipliers
     ]
   , testGroup "parsing"
     [ testProperty "null unit integral" testNullUnitInt

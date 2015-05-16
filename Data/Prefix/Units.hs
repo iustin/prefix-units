@@ -334,13 +334,20 @@ data FormatMode
     deriving (Show)
 
 -- | The available units range for various format modes.
-unitRange :: FormatMode -> [Unit]
-unitRange FormatSiAll          = siUnits
-unitRange FormatSiSupraunitary = siSupraunitary
-unitRange FormatSiKMGT         = siKMGT
-unitRange FormatBinary         = binaryUnits
-unitRange FormatUnscaled       = []
-unitRange (FormatFixed u)      = [u]
+unitRange :: FormatMode -> Either Unit [Unit]
+unitRange FormatSiAll          = Right siUnits
+unitRange FormatSiSupraunitary = Right siSupraunitary
+unitRange FormatSiKMGT         = Right siKMGT
+unitRange FormatBinary         = Right binaryUnits
+unitRange FormatUnscaled       = Right []
+unitRange (FormatFixed u)      = Left u
+
+-- | Whether a given value should be scaled (in auto-scaling modes) or
+-- not.
+shouldScale :: (Num a, Ord a) => a -> Bool
+-- FIXME: this is not nice at all: we hardcode the set [1, 10) instead
+-- of having it naturally follow from a base unit or similar.
+shouldScale val = val < 1 || val >= 10
 
 -- | Computes the recommended unit for displaying a given value. The
 -- simple algorithm uses the first unit for which we have a
@@ -349,17 +356,15 @@ unitRange (FormatFixed u)      = [u]
 -- `FormatFixed`, we always select the given unit, irrespective of the
 -- value.
 recommendedUnit :: (Real a) => FormatMode -> a -> Maybe Unit
-recommendedUnit (FormatFixed u) _ = Just u
-recommendedUnit fmt val
-  -- FIXME: this is not nice at all: we hardcode the set [1, 10)
-  -- instead of having it naturally follow from a base unit or
-  -- similar.
-  | val >= 1 && val < 10 = Nothing
-  | otherwise =
-    let range = unitRange fmt
-        ratv = Prelude.toRational val
-    in foldr (\u a -> if ratv / unitMultiplier u >= 1 then Just u else a)
-       Nothing $ reverse range
+recommendedUnit fmt val =
+  case unitRange fmt of
+    Left u -> Just u
+    Right range ->
+      if shouldScale val
+        then foldr (\u a -> if ratv / unitMultiplier u >= 1 then Just u else a)
+               Nothing $ reverse range
+        else Nothing
+      where ratv = Prelude.toRational val
 
 -- | Computes the scaled value and unit for a given value
 formatValue :: (RationalConvertible a) =>

@@ -101,6 +101,13 @@ genAutoMode = elements [ FormatSiAll
                        , FormatBinary
                        ]
 
+
+-- | Helper to check that unitRange retuns a Right [Unit], as expected
+-- (as we pass only auto-format modes).
+checkedUnitRange :: FormatMode -> [Unit]
+checkedUnitRange =
+  either (error "unitRange returned 'Left Unit'?!") id . unitRange
+
 -- * Instances
 
 instance Arbitrary Unit where
@@ -326,7 +333,7 @@ testTrivialFormattingShow =
 testRecommend :: Property
 testRecommend =
   forAll (elements [FormatSiAll, FormatBinary]) $ \fmt ->
-  forAll (elements (unitRange fmt)) $ \unit ->
+  forAll (elements (checkedUnitRange fmt)) $ \unit ->
   let value = unitMultiplier unit in
   case recommendedUnit fmt value of
     Nothing -> failTest $ "Expected recommendation of unit " ++
@@ -362,7 +369,7 @@ testForceNoUnit v =
 testFormatIntegral :: Property
 testFormatIntegral =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
-  forAll (elements (unitRange fmt)) $ \unit ->
+  forAll (elements (checkedUnitRange fmt)) $ \unit ->
   let fmted = formatValue fmt . truncate . unitMultiplier $ unit
   in fmted ==? (1::Integer, Just unit)
 
@@ -375,7 +382,7 @@ testFormatNegativePositive (Positive i) mode =
 testFormatFractional :: Property
 testFormatFractional =
   forAll (elements [FormatSiSupraunitary, FormatBinary]) $ \fmt ->
-  forAll (elements (unitRange fmt)) $ \unit ->
+  forAll (elements (checkedUnitRange fmt)) $ \unit ->
   let fmted = formatValue fmt . unitMultiplier $ unit
   in fmted ==? (1::Rational, Just unit)
 

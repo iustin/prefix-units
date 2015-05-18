@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 {-
 
@@ -38,7 +39,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 module Data.Prefix.Units.Compat
   where
 
-#if MIN_VERSION_base(4,6,0)
-#else
+#if !MIN_VERSION_base(4,6,0)
 import Control.Monad.Instances ()
+#endif
+
+#if !MIN_VERSION_base(4,3,0)
+instance Monad (Either a) where
+  return        = Right
+  Left l  >>= _ = Left l
+  Right r >>= f = f r
 #endif

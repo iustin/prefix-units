@@ -545,10 +545,7 @@ processUnit popts pmode valid_units unit_suffix =
                                        \ input string lacks one"
            UnitDefault def_unit -> Just $ Right def_unit
            UnitOptional -> Nothing
-    else Just $
-         -- this is because older GHC versions don't have the "Either
-         -- String a" monad instance
-         either Left (validUnit valid_units) (parseSymbol pmode unit_suffix)
+    else Just $ parseSymbol pmode unit_suffix >>= validUnit valid_units
 
 -- | Low-level parse routine. Takes two function arguments which fix
 -- the initial and final conversion, a parse mode and the string to be

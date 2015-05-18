@@ -537,15 +537,13 @@ processUnit :: ParseOptions
             -> ParseMode
             -> [Unit]
             -> String
-            -> Maybe (Either String Unit)
-processUnit popts pmode valid_units unit_suffix =
-  if null unit_suffix
-    then case popts of
-           UnitRequired -> Just $ Left "An unit is required but the\
-                                       \ input string lacks one"
-           UnitDefault def_unit -> Just $ Right def_unit
-           UnitOptional -> Nothing
-    else Just $ parseSymbol pmode unit_suffix >>= validUnit valid_units
+            -> Either String (Maybe Unit)
+processUnit UnitRequired    _ _ "" =
+  Left "An unit is required but the input string lacks one"
+processUnit (UnitDefault u) _ _ "" = Right $ Just u
+processUnit  UnitOptional   _ _ "" = Right $ Nothing
+processUnit _ pmode valid_units unit_suffix =
+  parseSymbol pmode unit_suffix >>= validUnit valid_units >>= return . Just
 
 -- | Low-level parse routine. Takes two function arguments which fix
 -- the initial and final conversion, a parse mode and the string to be
@@ -561,7 +559,7 @@ parseGeneric popts valid_units pmode str =
     [(v, suffix)] ->
       let unit_suffix = dropWhile (== ' ') suffix
           unit = processUnit popts pmode valid_units unit_suffix
-      in maybe (Right v) (fmap (scaleFromUnit v)) unit
+      in maybe v (scaleFromUnit v) `fmap` unit
     _ -> Left $ "Can't parse string '" ++ str ++ "'"
 
 -- | Converts a string to upper-case.

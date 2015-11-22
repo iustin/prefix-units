@@ -66,11 +66,11 @@ float\/doubles this is 'fromRational', for integral types this is
 
 A few examples are given below:
 
->>> showValue (Left FormatBinary) 2048
+>>> showValue FormatBinary 2048
 "2.0Ki"
->>> showValue (Left FormatSiAll) 0.0001
+>>> showValue FormatSiAll 0.0001
 "100.0u"
->>> showValue (Right Mebi) 1048576
+>>> showValue (FormatFixed Mebi) 1048576
 "1Mi"
 >>> parseValue ParseExact "2.5Ki"::Either String Double
 Right 2560.0

@@ -57,7 +57,7 @@ Extra-source-files:  README.md CHANGES.md Makefile example.hs
 -- Constraint on the version of Cabal needed to build this package.
 Cabal-version:       >= 1.8.0.2
 
-Tested-with:         GHC==6.12.1, GHC==7.4.1, GHC==7.6.3
+Tested-with:         GHC==7.6.3, GHC==7.8.4, GHC==7.10.2
 
 Source-repository head
   Type:             git

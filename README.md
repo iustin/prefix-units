@@ -25,6 +25,8 @@ few GHC extensions), so that it's trivial to use it in projects. Hence
 the use of some hand-coded conversions instead of using
 TemplateHaskell to generate them automatically.
 
+[![Build Status](https://travis-ci.org/iustin/prefix-units.svg?branch=master)](https://travis-ci.org/iustin/prefix-units)
+
 TODO
 ----
 

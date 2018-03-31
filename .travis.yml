@@ -2,10 +2,10 @@ language: haskell
 
 # let's test as many versions as we can!
 ghc:
-  - 7.4
-  - 7.6
-  - 7.8
-  - 7.10
+  - "7.4"
+  - "7.6"
+  - "7.8"
+  - "7.10"
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build && cabal test
 

@@ -13,5 +13,11 @@ script:
 #  - cabal sandbox init && cabal install hpc-coveralls
 #  - .cabal-sandbox/bin/hpc-coveralls
 
+# enable cache for standard Haskell directories.
+cache:
+  directories:
+  - $HOME/.ghc
+  - $HOME/.cabal
+
 notifications:
   email: true

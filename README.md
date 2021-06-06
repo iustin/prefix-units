@@ -25,7 +25,8 @@ few GHC extensions), so that it's trivial to use it in projects. Hence
 the use of some hand-coded conversions instead of using
 TemplateHaskell to generate them automatically.
 
-[![Build Status](https://travis-ci.org/iustin/prefix-units.svg?branch=master)](https://travis-ci.org/iustin/prefix-units)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/iustin/prefix-units/CI)](https://github.com/iustin/prefix-units/actions/workflows/ci.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/iustin/prefix-units)](https://codecov.io/gh/iustin/prefix-units)
 
 TODO
 ----

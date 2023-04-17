@@ -60,7 +60,7 @@ jobs:
       - name: Generate coverage report
         uses: 8c6794b6/hpc-codecov-action@v2
         with:
-          target: stack:test
+          target: cabal:test-units
           excludes: Main,Paths_my_package
 
       - name: Upload coverage report

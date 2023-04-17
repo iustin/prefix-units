@@ -422,6 +422,10 @@ testFormatModeShow :: FormatMode -> Property
 testFormatModeShow = total . show
 
 -- | Trivial assertion that the Show instance works
+testParseModeShow :: ParseMode -> Property
+testParseModeShow = total . show
+
+-- | Trivial assertion that the Show instance works
 testParseOptionsShow :: ParseOptions -> Property
 testParseOptionsShow = total . show
 
@@ -478,6 +482,7 @@ tests =
   , testGroup "round-trip"
     [ testProperty "rational round-trip" testRoundTripRational
     , testProperty "format mode show" testFormatModeShow
+    , testProperty "parse mode show" testParseModeShow
     , testProperty "parse options show" testParseOptionsShow
     ]
   ]

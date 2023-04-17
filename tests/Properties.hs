@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 module Main (main) where
 
 import Control.Applicative (pure, (<$>))
+import Control.DeepSeq (force)
 import Data.Char (toUpper)
 import Data.List
 import Data.Maybe (isNothing)
@@ -227,7 +228,7 @@ testSymbolParsingBinaryAll mode =
 -- | Fail to parse invalid symbols in any mode.
 testSymbolParsingFail :: ParseMode -> Property
 testSymbolParsingFail mode =
-  expectParseFailure (("NO-SUCH" `isInfixOf`) . map toUpper) $
+  expectParseFailure (("NO-SUCH" `isInfixOf`) . force . map toUpper) $
     parseSymbol mode "no-such"
 
 -- | Parsed values should be correct.
@@ -276,13 +277,13 @@ testParsingRational unit v =
 
 testFailParsing :: ParseMode -> Int -> Property
 testFailParsing pmode v =
-  expectParseFailure ("no-such" `isInfixOf`)
+  expectParseFailure (("no-such" `isInfixOf`) . force)
     (parseValue pmode ("no-such" ++ show v)::Either String Int)
 
 -- | Test fail parse on required unit.
 testParsingRequired :: ParseMode -> Int -> Property
 testParsingRequired pmode v =
-  expectParseFailure ("is required" `isInfixOf`)
+  expectParseFailure (("is required" `isInfixOf`) . force)
     (parseGeneric UnitRequired [] pmode (show v)::Either String Int)
 
 testParsingDefault :: Unit -> ParseMode -> Rational -> Property
@@ -293,7 +294,7 @@ testParsingDefault unit pmode v =
 testParsingInvalidList :: Unit -> [Unit] -> Int -> Property
 testParsingInvalidList unit valid v =
   unit `notElem` valid && not (null valid) ==>
-  expectParseFailure ("not part of the accepted unit list" `isInfixOf`)
+  expectParseFailure (("not part of the accepted unit list" `isInfixOf`) . force)
     (parseGeneric UnitOptional valid ParseExact
        (show v ++ unitSymbol unit)::Either String Int)
 

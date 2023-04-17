@@ -125,6 +125,12 @@ instance Arbitrary FormatMode where
 instance Arbitrary ParseMode where
   arbitrary = elements [minBound..maxBound]
 
+instance Arbitrary ParseOptions where
+  arbitrary = oneof [ pure UnitRequired
+                    , UnitDefault <$> arbitrary
+                    , pure UnitOptional
+                    ]
+
 allUnits :: [Unit]
 allUnits = [minBound..maxBound]
 
@@ -410,6 +416,14 @@ testRoundTripRational val mode =
                           "': " ++ err)
     Right val' -> val ==? val'
 
+-- | Trivial assertion that the Show instance works
+testFormatModeShow :: FormatMode -> Property
+testFormatModeShow = total . show
+
+-- | Trivial assertion that the Show instance works
+testParseOptionsShow :: ParseOptions -> Property
+testParseOptionsShow = total . show
+
 -- * Test harness
 
 main :: IO ()
@@ -462,5 +476,7 @@ tests =
     ]
   , testGroup "round-trip"
     [ testProperty "rational round-trip" testRoundTripRational
+    , testProperty "format mode show" testFormatModeShow
+    , testProperty "parse options show" testParseOptionsShow
     ]
   ]

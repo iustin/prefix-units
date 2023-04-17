@@ -35,7 +35,7 @@ The current interface of the library works, but is not nicely
 composable. I'm still looking for a nicer way to expose the parsing
 functionality.
 
-Currently, the binary and SI units are mixed in the same
+Currently, the IEC (binary) and SI units are mixed in the same
 data-type. This works, but at some level I think two separate types
 would be more "correct", at the expense of a more complex API.
 

@@ -131,7 +131,9 @@ import Data.Prefix.Units.Compat ()
 default ()
 
 -- | The unit type.
-data Unit = Yocto
+data Unit = Quecto
+          | Ronto
+          | Yocto
           | Zepto
           | Atto
           | Femto
@@ -157,13 +159,38 @@ data Unit = Yocto
           | Exbi
           | Zetta
           | Yotta
+          | Ronna
+          | Quetta
             deriving (Show, Eq, Enum, Bounded, Ord)
 
 -- | List of all SI units.
 siUnits :: [Unit]
 siUnits
-  = [Yocto, Zepto, Atto, Femto, Pico, Nano, Micro, Milli, Centi,
-     Deci, Deka, Hecto, Kilo, Mega, Giga, Tera, Peta, Exa, Zetta, Yotta]
+  = [ Quecto
+    , Ronto
+    , Yocto
+    , Zepto
+    , Atto
+    , Femto
+    , Pico
+    , Nano
+    , Micro
+    , Milli
+    , Centi
+    , Deci
+    , Deka
+    , Hecto
+    , Kilo
+    , Mega
+    , Giga
+    , Tera
+    , Peta
+    , Exa
+    , Zetta
+    , Yotta
+    , Ronna
+    , Quetta
+    ]
 
 -- | List of binary units.
 binaryUnits :: [Unit]
@@ -194,90 +221,102 @@ binaryBase = 2
 -- >>> unitMultiplier Mebi
 -- 1048576 % 1
 unitMultiplier :: Unit -> Rational
-unitMultiplier Yocto = siBase     ^^ (-24 :: Int)
-unitMultiplier Zepto = siBase     ^^ (-21 :: Int)
-unitMultiplier Atto  = siBase     ^^ (-18 :: Int)
-unitMultiplier Femto = siBase     ^^ (-15 :: Int)
-unitMultiplier Pico  = siBase     ^^ (-12 :: Int)
-unitMultiplier Nano  = siBase     ^^ ( -9 :: Int)
-unitMultiplier Micro = siBase     ^^ ( -6 :: Int)
-unitMultiplier Milli = siBase     ^^ ( -3 :: Int)
-unitMultiplier Centi = siBase     ^^ ( -2 :: Int)
-unitMultiplier Deci  = siBase     ^^ ( -1 :: Int)
-unitMultiplier Deka  = siBase     ^^ (  1 :: Int)
-unitMultiplier Hecto = siBase     ^^ (  2 :: Int)
-unitMultiplier Kilo  = siBase     ^^ (  3 :: Int)
-unitMultiplier Kibi  = binaryBase ^^ ( 10 :: Int)
-unitMultiplier Mega  = siBase     ^^ (  6 :: Int)
-unitMultiplier Mebi  = binaryBase ^^ ( 20 :: Int)
-unitMultiplier Giga  = siBase     ^^ (  9 :: Int)
-unitMultiplier Gibi  = binaryBase ^^ ( 30 :: Int)
-unitMultiplier Tera  = siBase     ^^ ( 12 :: Int)
-unitMultiplier Tebi  = binaryBase ^^ ( 40 :: Int)
-unitMultiplier Peta  = siBase     ^^ ( 15 :: Int)
-unitMultiplier Pebi  = binaryBase ^^ ( 50 :: Int)
-unitMultiplier Exa   = siBase     ^^ ( 18 :: Int)
-unitMultiplier Exbi  = binaryBase ^^ ( 60 :: Int)
-unitMultiplier Zetta = siBase     ^^ ( 21 :: Int)
-unitMultiplier Yotta = siBase     ^^ ( 24 :: Int)
+unitMultiplier Quecto = siBase     ^^ (-30 :: Int)
+unitMultiplier Ronto  = siBase     ^^ (-27 :: Int)
+unitMultiplier Yocto  = siBase     ^^ (-24 :: Int)
+unitMultiplier Zepto  = siBase     ^^ (-21 :: Int)
+unitMultiplier Atto   = siBase     ^^ (-18 :: Int)
+unitMultiplier Femto  = siBase     ^^ (-15 :: Int)
+unitMultiplier Pico   = siBase     ^^ (-12 :: Int)
+unitMultiplier Nano   = siBase     ^^ ( -9 :: Int)
+unitMultiplier Micro  = siBase     ^^ ( -6 :: Int)
+unitMultiplier Milli  = siBase     ^^ ( -3 :: Int)
+unitMultiplier Centi  = siBase     ^^ ( -2 :: Int)
+unitMultiplier Deci   = siBase     ^^ ( -1 :: Int)
+unitMultiplier Deka   = siBase     ^^ (  1 :: Int)
+unitMultiplier Hecto  = siBase     ^^ (  2 :: Int)
+unitMultiplier Kilo   = siBase     ^^ (  3 :: Int)
+unitMultiplier Kibi   = binaryBase ^^ ( 10 :: Int)
+unitMultiplier Mega   = siBase     ^^ (  6 :: Int)
+unitMultiplier Mebi   = binaryBase ^^ ( 20 :: Int)
+unitMultiplier Giga   = siBase     ^^ (  9 :: Int)
+unitMultiplier Gibi   = binaryBase ^^ ( 30 :: Int)
+unitMultiplier Tera   = siBase     ^^ ( 12 :: Int)
+unitMultiplier Tebi   = binaryBase ^^ ( 40 :: Int)
+unitMultiplier Peta   = siBase     ^^ ( 15 :: Int)
+unitMultiplier Pebi   = binaryBase ^^ ( 50 :: Int)
+unitMultiplier Exa    = siBase     ^^ ( 18 :: Int)
+unitMultiplier Exbi   = binaryBase ^^ ( 60 :: Int)
+unitMultiplier Zetta  = siBase     ^^ ( 21 :: Int)
+unitMultiplier Yotta  = siBase     ^^ ( 24 :: Int)
+unitMultiplier Ronna  = siBase     ^^ ( 27 :: Int)
+unitMultiplier Quetta = siBase     ^^ ( 30 :: Int)
 
 -- | Returns the unit full name.
 unitName :: Unit -> String
-unitName Yocto = "yocto"
-unitName Zepto = "zepto"
-unitName Atto  = "atto"
-unitName Femto = "femto"
-unitName Pico  = "pico"
-unitName Nano  = "nano"
-unitName Micro = "micro"
-unitName Milli = "milli"
-unitName Centi = "centi"
-unitName Deci  = "deci"
-unitName Deka  = "deka"
-unitName Hecto = "hecto"
-unitName Kilo  = "kilo"
-unitName Kibi  = "kibi"
-unitName Mega  = "mega"
-unitName Mebi  = "mebi"
-unitName Giga  = "giga"
-unitName Gibi  = "gibi"
-unitName Tera  = "tera"
-unitName Tebi  = "tebi"
-unitName Peta  = "peta"
-unitName Pebi  = "pebi"
-unitName Exa   = "exa"
-unitName Exbi  = "exbi"
-unitName Zetta = "zetta"
-unitName Yotta = "yotta"
+unitName Quecto = "quecto"
+unitName Ronto  = "ronto"
+unitName Yocto  = "yocto"
+unitName Zepto  = "zepto"
+unitName Atto   = "atto"
+unitName Femto  = "femto"
+unitName Pico   = "pico"
+unitName Nano   = "nano"
+unitName Micro  = "micro"
+unitName Milli  = "milli"
+unitName Centi  = "centi"
+unitName Deci   = "deci"
+unitName Deka   = "deka"
+unitName Hecto  = "hecto"
+unitName Kilo   = "kilo"
+unitName Kibi   = "kibi"
+unitName Mega   = "mega"
+unitName Mebi   = "mebi"
+unitName Giga   = "giga"
+unitName Gibi   = "gibi"
+unitName Tera   = "tera"
+unitName Tebi   = "tebi"
+unitName Peta   = "peta"
+unitName Pebi   = "pebi"
+unitName Exa    = "exa"
+unitName Exbi   = "exbi"
+unitName Zetta  = "zetta"
+unitName Yotta  = "yotta"
+unitName Ronna  = "ronna"
+unitName Quetta = "quetta"
 
 -- | Returns the unit ASCII symbol.
 unitSymbol :: Unit -> String
-unitSymbol Yocto = "y"
-unitSymbol Zepto = "z"
-unitSymbol Atto  = "a"
-unitSymbol Femto = "f"
-unitSymbol Pico  = "p"
-unitSymbol Nano  = "n"
-unitSymbol Micro = "u"
-unitSymbol Milli = "m"
-unitSymbol Centi = "c"
-unitSymbol Deci  = "d"
-unitSymbol Deka  = "da"
-unitSymbol Hecto = "h"
-unitSymbol Kilo  = "k"
-unitSymbol Kibi  = "Ki"
-unitSymbol Mega  = "M"
-unitSymbol Mebi  = "Mi"
-unitSymbol Giga  = "G"
-unitSymbol Gibi  = "Gi"
-unitSymbol Tera  = "T"
-unitSymbol Tebi  = "Ti"
-unitSymbol Peta  = "P"
-unitSymbol Pebi  = "Pi"
-unitSymbol Exa   = "E"
-unitSymbol Exbi  = "Ei"
-unitSymbol Zetta = "Z"
-unitSymbol Yotta = "Y"
+unitSymbol Quecto = "q"
+unitSymbol Ronto  = "r"
+unitSymbol Yocto  = "y"
+unitSymbol Zepto  = "z"
+unitSymbol Atto   = "a"
+unitSymbol Femto  = "f"
+unitSymbol Pico   = "p"
+unitSymbol Nano   = "n"
+unitSymbol Micro  = "u"
+unitSymbol Milli  = "m"
+unitSymbol Centi  = "c"
+unitSymbol Deci   = "d"
+unitSymbol Deka   = "da"
+unitSymbol Hecto  = "h"
+unitSymbol Kilo   = "k"
+unitSymbol Kibi   = "Ki"
+unitSymbol Mega   = "M"
+unitSymbol Mebi   = "Mi"
+unitSymbol Giga   = "G"
+unitSymbol Gibi   = "Gi"
+unitSymbol Tera   = "T"
+unitSymbol Tebi   = "Ti"
+unitSymbol Peta   = "P"
+unitSymbol Pebi   = "Pi"
+unitSymbol Exa    = "E"
+unitSymbol Exbi   = "Ei"
+unitSymbol Zetta  = "Z"
+unitSymbol Yotta  = "Y"
+unitSymbol Ronna  = "R"
+unitSymbol Quetta = "Q"
 
 -- | Returns the unit symbol, which for the 'Micro' unit is not ASCII.
 fancySymbol :: Unit -> String
@@ -410,6 +449,8 @@ unknownUnit unit = Left $ "Unrecognised unit '" ++ unit ++ "'"
 
 -- | Parses a symbol in the exact mode. See 'ParseExact' for details.
 parseExactSymbol :: String -> Either String Unit
+parseExactSymbol "q"  = Right Quecto
+parseExactSymbol "r"  = Right Ronto
 parseExactSymbol "y"  = Right Yocto
 parseExactSymbol "z"  = Right Zepto
 parseExactSymbol "a"  = Right Atto
@@ -436,6 +477,8 @@ parseExactSymbol "E"  = Right Exa
 parseExactSymbol "Ei" = Right Exbi
 parseExactSymbol "Z"  = Right Zetta
 parseExactSymbol "Y"  = Right Yotta
+parseExactSymbol "R"  = Right Ronna
+parseExactSymbol "Q"  = Right Quetta
 parseExactSymbol unit = unknownUnit unit
 
 -- | Helper for 'parseBinarySymbol' which only deals with upper-case
@@ -476,6 +519,8 @@ helperParseKMGT "E"  = Right Exa
 helperParseKMGT "EI" = Right Exbi
 helperParseKMGT "Z"  = Right Zetta
 helperParseKMGT "Y"  = Right Yotta
+helperParseKMGT "R"  = Right Ronna
+helperParseKMGT "Q"  = Right Quetta
 -- FIXME: error message will contain upper-case version of the symbol
 helperParseKMGT symbol = unknownUnit symbol
 

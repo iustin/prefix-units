@@ -1,3 +1,13 @@
+Version 0.3.0
+
+(unreleased)
+
+* Add the new quecto/ronto/ronna/quetta units. I didn't think I'd ever
+  have to extend the list of units! Not sure entirely if these should
+  be part of the parseKMGT function, since they're high enough to be
+  out of normal computer units, but they do have lower/upper versions,
+  so adding them is the right thing.
+
 Version 0.2.0
 
 * Incompatible API change to cleanup some initial design decisions:

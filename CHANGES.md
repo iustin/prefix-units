@@ -1,14 +1,16 @@
-Version 0.3.0
+## Version 0.3.0
 
-(unreleased)
+*released Wed, 26 Apr 2023*
 
 * Add the new quecto/ronto/ronna/quetta units. I didn't think I'd ever
   have to extend the list of units! Not sure entirely if these should
   be part of the parseKMGT function, since they're high enough to be
   out of normal computer units, but they do have lower/upper versions,
-  so adding them is the right thing.
+  so adding them seems the right thing.
 
-Version 0.2.0
+## Version 0.2.0
+
+*released Sun, 22 Nov 2015*
 
 * Incompatible API change to cleanup some initial design decisions:
   the two level `FormatOption`/`FormatMode` model is removed, the
@@ -20,7 +22,9 @@ Version 0.2.0
   disables scaling; it should have the same effect without introducing
   an artificial unit.
 
-Version 0.1.0.2
+## Version 0.1.0.2
+
+*released Sun, 23 Nov 2014*
 
 * Trivial release for compatibility with QuickCheck 2.7 and older
   HUnit packages as found in Wheezy.
@@ -28,12 +32,16 @@ Version 0.1.0.2
   create issues in some cases.
 * Fixed issue #2 (Wrong formatting for small numbers in SI mode).
 
-Version 0.1.0.1
+## Version 0.1.0.1
+
+*released Mon, 19 May 2014*
 
 * Trivial release updating upper package bounds (for testing),
   updating homepage/related settings as part of move to github, and
   fixing a few documentation issues.
 
-Version 0.1.0
+## Version 0.1.0
+
+*released Thu, 03 May 2012*
 
 * Initial release.

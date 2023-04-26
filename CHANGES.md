@@ -1,3 +1,15 @@
+## Version 0.3.0.1
+
+*released Thu, 27 Apr 2023*
+
+It turns out that even if `cabal check` shows no warnings, Hackage
+doesn't accept packages with very old cabal version constraints. So
+this release bumps that, which in turns makes `cabal check` actually
+start to show warnings, so modernise the cabal file as a result.
+
+There are no code changes compared to 0.3.0, so this is a no-op
+release from the point of view of functionality.
+
 ## Version 0.3.0
 
 *released Wed, 26 Apr 2023*

@@ -6,4 +6,6 @@
 # *~
 
 /dist/
+/dist-newstyle/
+/cabal.project.local
 /report.html

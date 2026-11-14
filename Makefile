@@ -18,7 +18,7 @@ configure:
 
 test:
 	cabal build
-	cabal test
+	cabal test --test-show-details=direct
 
 dist:
 	cabal sdist

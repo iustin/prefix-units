@@ -122,7 +122,6 @@ module Data.Prefix.Units
   , showValueWith
   ) where
 
-import Control.Monad (liftM)
 import Data.Char (toUpper)
 import Data.List (intercalate)
 
@@ -587,7 +586,7 @@ processUnit UnitRequired    _ _ "" =
 processUnit (UnitDefault u) _ _ "" = Right $ Just u
 processUnit  UnitOptional   _ _ "" = Right   Nothing
 processUnit _ pmode valid_units unit_suffix =
-  liftM Just (parseSymbol pmode unit_suffix >>= validUnit valid_units)
+  fmap Just (parseSymbol pmode unit_suffix >>= validUnit valid_units)
 
 -- | Low-level parse routine. Takes two function arguments which fix
 -- the initial and final conversion, a parse mode and the string to be

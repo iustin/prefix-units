@@ -98,7 +98,6 @@ Test-Suite test-units
   hs-source-dirs:    tests
   main-is:           Properties.hs
   build-depends:     base  >= 3
-                   , Cabal >= 1.9.2
                    , test-framework >= 0.6
                    , test-framework-quickcheck2 >= 0.2.12
                    , test-framework-hunit >= 0.2.7

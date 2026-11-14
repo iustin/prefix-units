@@ -105,7 +105,7 @@ Test-Suite test-units
                    , HUnit >= 1.2.4
                    , deepseq >= 1.4.0.0
                    , prefix-units
-  ghc-options:       -Wall -fno-warn-orphans
+  ghc-options:       -Wall -Wno-orphans
   default-extensions:
                    ScopedTypeVariables
 

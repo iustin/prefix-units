@@ -54,7 +54,8 @@ build-type:          Simple
 
 -- Extra files to be distributed with the package, such as examples or
 -- a README.
-extra-source-files:  README.md CHANGES.md Makefile example.hs
+extra-source-files:  README.md Makefile example.hs
+extra-doc-files:     CHANGES.md
 
 tested-with:         GHC==9.0
                    , GHC==9.2

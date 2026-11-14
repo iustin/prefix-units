@@ -79,7 +79,7 @@ library
   exposed-modules: Data.Prefix.Units
 
   -- Packages needed in order to build this package.
-  build-depends:  base >= 3 && < 5
+  build-depends:  base >= 4.15 && < 5
 
   ghc-options:    -Wall
 
@@ -97,7 +97,7 @@ Test-Suite test-units
   type:              exitcode-stdio-1.0
   hs-source-dirs:    tests
   main-is:           Properties.hs
-  build-depends:     base  >= 3
+  build-depends:     base >= 4.15 && < 5
                    , test-framework >= 0.6
                    , test-framework-quickcheck2 >= 0.2.12
                    , test-framework-hunit >= 0.2.7

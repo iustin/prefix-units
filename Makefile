@@ -14,7 +14,7 @@ haddock:
 
 configure:
 	cabal clean
-	cabal configure --enable-tests --enable-library-coverage
+	cabal configure --enable-tests --enable-coverage
 
 test:
 	cabal build

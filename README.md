@@ -16,9 +16,8 @@ handle "nice" values like:
 And so on. For details on the API, look at the Haddock documentation
 for the `Data.Prefix.Units` module.
 
-For building and installing, `cabal configure` and related commands
-are enough. Run `cabal configure --enable-tests && cabal build &&
-cabal test` if you want to run the unit-tests.
+For building and installing, `cabal build` is enough. Run
+`cabal test --enable-tests` to run the unit-tests.
 
 The library is designed to have very few dependencies (only base and a
 few GHC extensions), so that it's trivial to use it in projects. Hence

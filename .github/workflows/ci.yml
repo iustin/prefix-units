@@ -1,6 +1,7 @@
+name: CI
+
 on:
-  # Trigger the workflow on push or
-  # pull request, but only for the
+  # Trigger the workflow on push or pull request, but only for the
   # master branch.
   push:
     branches:
@@ -8,65 +9,73 @@ on:
   pull_request:
     branches:
       - master
-  # Weekly run to account for
-  # changed dependencies.
+  # Weekly run to account for changed dependencies.
   schedule:
     - cron: '17 04 * * 0'
 
-name: CI
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build and test
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        # One job per GHC 9 major release, plus `latest` so a newly
+        # released GHC is tested before the list below is updated.
+        # `latest` currently overlaps 9.14. GHC 8 is not tested:
+        # 8.10.7 (2021) was the last release in that series.
         ghc:
-          - '8.0'
-          - '8.2'
-          - '8.4'
-          - '8.6'
-          - '8.8'
-          - '8.10'
           - '9.0'
           - '9.2'
           - '9.4'
           - '9.6'
+          - '9.8'
+          - '9.10'
+          - '9.12'
+          - '9.14'
           - 'latest'
         # Also build on macos. Windows seems flaky, with some
         # quickcheck failure appearing relatively consistent, but not
-        # always.
+        # always. macos-latest is Apple Silicon, so only a current
+        # GHC is installed there.
         include:
           - os: macos-latest
             ghc: 'latest'
-      fail-fast: false
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
-          cabal-version: ${{ matrix.cabal }}
+          cabal-version: 'latest'
 
       - name: Configure
-        run: cabal configure --enable-tests --enable-library-coverage
+        run: cabal configure --enable-tests --enable-coverage
 
       - name: Build the code
         run: cabal build
 
       - name: Run tests
-        run: cabal test
+        run: cabal test --test-show-details=direct
 
       - name: Generate coverage report
-        uses: 8c6794b6/hpc-codecov-action@v2
+        uses: 8c6794b6/hpc-codecov-action@v4
         with:
           target: cabal:test-units
-          excludes: Main,Paths_my_package
+          excludes: Main,Paths_prefix_units
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
           name: codecov-${{ matrix.os }}-${{ matrix.ghc }}

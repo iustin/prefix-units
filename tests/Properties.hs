@@ -1,5 +1,3 @@
-{-# LANGUAGE CPP #-}
-
 {-
 
 Copyright 2012, 2014, Google Inc.
@@ -52,13 +50,6 @@ import Test.HUnit hiding (Test)
 import Data.Prefix.Units
 
 -- * Test helpers
-
-#if MIN_VERSION_QuickCheck(2,7,0)
-#else
--- | Forward-compatible name for QuickCheck < 2.7.
-counterexample :: Test.QuickCheck.Testable prop => String -> prop -> Property
-counterexample = printTestCase
-#endif
 
 failTest :: String -> Property
 failTest msg = counterexample msg False

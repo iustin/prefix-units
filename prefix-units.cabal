@@ -101,13 +101,12 @@ Test-Suite test-units
                    , test-framework >= 0.6
                    , test-framework-quickcheck2 >= 0.2.12
                    , test-framework-hunit >= 0.2.7
-                   , QuickCheck >= 2.4.2
+                   , QuickCheck >= 2.7
                    , HUnit >= 1.2.4
                    , deepseq >= 1.4.0.0
                    , prefix-units
   ghc-options:       -Wall -fno-warn-orphans
   default-extensions:
-                   CPP
                    ScopedTypeVariables
 
   default-language: Haskell2010

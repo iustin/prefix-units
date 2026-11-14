@@ -39,7 +39,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 module Main (main) where
 
-import Control.Applicative (pure, (<$>))
 import Control.DeepSeq (force)
 import Data.Char (toUpper)
 import Data.List
@@ -179,7 +178,7 @@ testSISmallMultipliers = do
   let baseExp = siBase ^^ (3::Int)
   mapM_ (\unit -> assertEqual ("For unit " ++ unitName unit ++ ": ")
          (baseExp * unitMultiplier (pred unit)) (unitMultiplier unit))
-      $ tail (filter (<= Milli) siUnits)
+      $ drop 1 (filter (<= Milli) siUnits)
 
 -- ** Parsing
 

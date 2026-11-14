@@ -126,8 +126,6 @@ import Control.Monad (liftM)
 import Data.Char (toUpper)
 import Data.List (intercalate)
 
-import Data.Prefix.Units.Compat ()
-
 default ()
 
 -- | The unit type.

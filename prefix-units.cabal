@@ -81,9 +81,6 @@ library
   -- Packages needed in order to build this package.
   build-depends:  base >= 3 && < 5
 
-  -- Modules not exported by this package.
-  other-modules:  Data.Prefix.Units.Compat
-
   ghc-options:    -Wall
 
   default-language: Haskell2010

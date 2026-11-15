@@ -19,6 +19,19 @@ for the `Data.Prefix.Units` module.
 For building and installing, `cabal build` is enough. Run
 `cabal test --enable-tests` to run the unit-tests.
 
+Releasing
+---------
+
+1. Update `version:` and the `source-repository this` tag in
+   `prefix-units.cabal`, and add a `## Version X.Y.Z` section to
+   `CHANGES.md`. Commit these.
+2. Run `make release-tag`. It runs `make check-release` (the version,
+   tag and changelog agree, and `cabal check` passes), then creates the
+   signed tag `vX.Y.Z`.
+3. Push the tag. The release workflow runs `make check-tag` and
+   uploads a Hackage candidate.
+4. Review the candidate and publish it on Hackage.
+
 The library is designed to have very few dependencies (only base and a
 few GHC extensions), so that it's trivial to use it in projects. Hence
 the use of some hand-coded conversions instead of using

@@ -2,7 +2,8 @@ name: Release
 
 on:
   # The tag must point at the commit whose cabal file already names
-  # that version, including the source-repository tag.
+  # that version, including the source-repository tag. `make
+  # release-tag` creates such a tag; `make check-tag` verifies it.
   push:
     tags:
       - "v*"
@@ -23,6 +24,12 @@ jobs:
         with:
           ghc-version: "latest"
           cabal-version: "latest"
+
+      # This gates the whole release, not just the upload. It runs here
+      # because `cabal check` needs the toolchain set up above, and
+      # github-release only runs after this job succeeds.
+      - name: Check the tag against the cabal file and changelog
+        run: make check-tag TAG="$GITHUB_REF_NAME"
 
       - name: Build the source and documentation archives
         run: |

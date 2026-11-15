@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  # The tag must point at the commit whose cabal file already names
+  # that version, including the source-repository tag.
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  hackage-candidate:
+    name: Upload Hackage candidate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Haskell
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "latest"
+          cabal-version: "latest"
+
+      - name: Build the source and documentation archives
+        run: |
+          cabal sdist
+          cabal haddock --haddock-for-hackage
+          mkdir -p "${RUNNER_TEMP}/packages" "${RUNNER_TEMP}/docs"
+          cp dist-newstyle/sdist/*.tar.gz "${RUNNER_TEMP}/packages/"
+          cp dist-newstyle/*-docs.tar.gz "${RUNNER_TEMP}/docs/"
+
+      # publish: false uploads a candidate. Publishing it on Hackage
+      # is a separate, permanent step.
+      - name: Upload candidate
+        uses: haskell-actions/hackage-publish@v1
+        with:
+          hackageServer: https://hackage.haskell.org
+          hackageToken: ${{ secrets.HACKAGE_AUTH_TOKEN }}
+          packagesPath: ${{ runner.temp }}/packages
+          docsPath: ${{ runner.temp }}/docs
+          publish: false

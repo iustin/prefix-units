@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # Open a pull request when an action in .github/workflows has a
+  # newer release. This does not run during a build.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

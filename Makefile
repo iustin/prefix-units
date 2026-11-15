@@ -28,6 +28,18 @@ test:
 dist:
 	cabal sdist
 
+# Builds the source and documentation archives for Hackage and copies
+# them to $(HACKAGE_DIR)/packages and $(HACKAGE_DIR)/docs. Used by the
+# release workflow.
+HACKAGE_DIR = dist
+hackage-dist:
+	cabal sdist
+	cabal haddock --haddock-for-hackage
+	rm -rf $(HACKAGE_DIR)/packages $(HACKAGE_DIR)/docs
+	mkdir -p $(HACKAGE_DIR)/packages $(HACKAGE_DIR)/docs
+	cp dist-newstyle/sdist/prefix-units-$(VERSION).tar.gz $(HACKAGE_DIR)/packages/
+	cp dist-newstyle/prefix-units-$(VERSION)-docs.tar.gz $(HACKAGE_DIR)/docs/
+
 lint:
 	@rm -f report.html
 	hlint \
@@ -71,7 +83,8 @@ release-tag: check-release
 
 clean:
 	cabal clean
+	rm -rf dist
 	rm -f report.html
 
-.PHONY: build int-docs haddock configure test dist lint clean \
+.PHONY: build int-docs haddock configure test dist hackage-dist lint clean \
 	release-notes check-release check-tag release-tag

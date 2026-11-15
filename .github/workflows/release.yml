@@ -32,12 +32,7 @@ jobs:
         run: make check-tag TAG="$GITHUB_REF_NAME"
 
       - name: Build the source and documentation archives
-        run: |
-          cabal sdist
-          cabal haddock --haddock-for-hackage
-          mkdir -p "${RUNNER_TEMP}/packages" "${RUNNER_TEMP}/docs"
-          cp dist-newstyle/sdist/*.tar.gz "${RUNNER_TEMP}/packages/"
-          cp dist-newstyle/*-docs.tar.gz "${RUNNER_TEMP}/docs/"
+        run: make hackage-dist HACKAGE_DIR="${RUNNER_TEMP}"
 
       # publish: false uploads a candidate. Publishing it on Hackage
       # is a separate, permanent step.

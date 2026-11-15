@@ -28,9 +28,11 @@ Releasing
 2. Run `make release-tag`. It runs `make check-release` (the version,
    tag and changelog agree, and `cabal check` passes), then creates the
    signed tag `vX.Y.Z`.
-3. Push the tag. The release workflow runs `make check-tag` and
-   uploads a Hackage candidate.
-4. Review the candidate and publish it on Hackage.
+3. Push the tag. The release workflow runs `make check-tag`, uploads
+   a Hackage candidate, and then opens a draft GitHub release with the
+   `CHANGES.md` section (`make release-notes`) as its notes.
+4. Review the candidate and publish it on Hackage, then publish the
+   GitHub draft.
 
 The library is designed to have very few dependencies (only base and a
 few GHC extensions), so that it's trivial to use it in projects. Hence

@@ -49,3 +49,26 @@ jobs:
           packagesPath: ${{ runner.temp }}/packages
           docsPath: ${{ runner.temp }}/docs
           publish: false
+
+  # Runs only after the candidate upload succeeds, so a failed upload
+  # does not leave a draft release behind. This is the only job that
+  # can write to the repository, and it never sees the Hackage token.
+  github-release:
+    name: Draft GitHub release
+    needs: hackage-candidate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          make -s release-notes > "${RUNNER_TEMP}/notes.md"
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file "${RUNNER_TEMP}/notes.md"

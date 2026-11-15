@@ -17,3 +17,10 @@ README needs to be updated.
 When editing the actual code, make sure to add tests that cover all changes, and
 to run tests (`make test`) and the linter (`make lint`) before committing the
 code. While this only covers the local version of GHC, it is a baseline step.
+
+Changes that might be interesting to users of this library should be added to
+the `CHANGES.md` file as they are implemented, in the same commit, under an
+`## Unreleased changes` header. This includes changes to how releases are
+built, tagged and uploaded to Hackage, since users may rely on that to judge
+where a published package comes from. The header will become the new version
+header once a release is made.

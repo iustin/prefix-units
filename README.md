@@ -23,13 +23,13 @@ Releasing
 ---------
 
 1. Update `version:` and the `source-repository this` tag in
-   `prefix-units.cabal`, and add a `## Version X.Y.Z` section to
-   `CHANGES.md`. Commit these.
+   `prefix-units.cabal`, and rename the `## Unreleased changes`
+   section in `CHANGES.md` to `## Version X.Y.Z`. Commit these.
 2. Run `make release-tag`. It runs `make check-release` (the version,
-   tag and changelog agree, and `cabal check` passes), then creates the
-   signed tag `vX.Y.Z`. `make hackage-dist` builds the same source
-   and documentation archives that the workflow uploads, if you want
-   to inspect them first.
+   tag and changelog agree, no Unreleased section is left, and `cabal
+   check` passes), then creates the signed tag `vX.Y.Z`. `make
+   hackage-dist` builds the same source and documentation archives
+   that the workflow uploads, if you want to inspect them first.
 3. Push the tag. The release workflow runs `make check-tag`, uploads
    a Hackage candidate, and then opens a draft GitHub release with the
    `CHANGES.md` section (`make release-notes`) as its notes.

@@ -55,12 +55,14 @@ release-notes:
 	' CHANGES.md
 
 # Checks that the cabal file and CHANGES.md are ready for releasing
-# $(VERSION).
+# $(VERSION), and that CHANGES.md has no Unreleased section left.
 check-release:
 	@test -n "$(VERSION)" || \
 	  { echo "No version found in $(CABAL_FILE)." >&2; exit 1; }
 	@test "$(REPO_TAG)" = "v$(VERSION)" || \
 	  { echo "source-repository this names tag '$(REPO_TAG)', expected 'v$(VERSION)'." >&2; exit 1; }
+	@! grep -qi '^##[[:space:]]*Unreleased' CHANGES.md || \
+	  { echo "CHANGES.md still has an Unreleased section; rename it to '## Version X.Y.Z' for the release." >&2; exit 1; }
 	@$(MAKE) -s --no-print-directory release-notes > /dev/null
 	cabal check
 
